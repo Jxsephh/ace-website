@@ -1,0 +1,28 @@
+.ace-row {
+  /* margin-top:50px; */
+  margin-bottom:2px;
+  /* background-color:#fff; */
+  display: flex;
+  flex:1;
+  justify-content: space-evenly;
+}
+
+.ace-column {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top:30px;
+}
+
+@media(max-width:500px){
+  .ace-row {
+    /* margin-top:50px; */
+    margin-bottom:2px;
+    /* background-color:#fff; */
+    display: flex;
+    flex:1;
+    justify-content: space-evenly;
+    flex-direction: column;
+  }
+}
