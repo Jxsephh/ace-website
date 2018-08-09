@@ -25,4 +25,8 @@
     justify-content: space-evenly;
     flex-direction: column;
   }
+
+  #facebook-icon {
+    margin-left:100px;
+  }
 }
