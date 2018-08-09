@@ -5,13 +5,22 @@
 
 /* Basic Elements ---------------------------------------------------------- */
 
+:root {
+  --background-color: #eef1f7;
+  --surface-color: #d5dae5;
+  --primary-color: #35475e;
+  --primary-dark-color: #233245;
+  --font-color-dark: black;
+  --font-color-light: white;
+}
+
 body, html {
   width: 100%;
   height: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #600000;
+  color: var(--primary-color-dark);
 }
 
 h1 {
@@ -25,7 +34,7 @@ p {
 body {
   padding-top: 30px;
   font-family: 'Roboto Slab';
-  background-color: ivory;
+  background-color: var(--background-color);
 }
 
 footer {
@@ -38,10 +47,10 @@ h3 hr,
 h4 hr, 
 h5 hr,
 h6 hr {
-  color: #600000;             /* IE7+ */
+  color: var(--primary-color);             /* IE7+ */
   border-width: 2px;
-  border-color: #600000;      /* Chrome and Safari */
-  background-color: #600000;  /* Firefox and Opera */
+  border-color: var(--primary-color);      /* Chrome and Safari */
+  background-color: var(--primary-color);  /* Firefox and Opera */
   max-width: 900px;
 }
 
@@ -67,8 +76,8 @@ section {
 /* Navbar ------------------------------------------------------------------ */
 
 .navbar-default {
-  background-color: #600000;
-  border-color: #600000;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
   font-weight: bold;
   line-height: 30px;
 }
@@ -86,7 +95,7 @@ section {
 
 .navbar-default .navbar-toggle:hover,
 .navbar-default .navbar-toggle:focus {
-  background-color: #600000;
+  background-color: var(--primary-color);
 }
 
 .navbar-default .navbar-nav > li > a:hover,
@@ -94,6 +103,6 @@ section {
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-  color: #600000;
-  background-color: white;
+  color: var(--primary-color);
+  background-color: var(--background-color);
 }
