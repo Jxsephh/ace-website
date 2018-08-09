@@ -82,9 +82,18 @@
 
 /* Calendar ---------------------------------------------------------------- */
 
-#calendar {
+#letter {
   width: 100%;
   background-color: var(--surface-color);
+}
+
+#letter img {
+  float: left;
+  padding: 15px 15px 15px 15px;
+}
+
+#letter p {
+  text-align: left;
 }
 
 /* Contact Us Section ------------------------------------------------------ */
