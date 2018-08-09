@@ -10,6 +10,7 @@
   --surface-color: #d5dae5;
   --primary-color: #35475e;
   --primary-dark-color: #233245;
+  --accent-color: #008CBA;
   --font-color-dark: black;
   --font-color-light: white;
 }
@@ -71,6 +72,10 @@ section {
   footer {
     font-size: 1.4em;
   }
+}
+
+a {
+  color: var(--accent-color);
 }
 
 /* Navbar ------------------------------------------------------------------ */
