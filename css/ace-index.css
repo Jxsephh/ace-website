@@ -59,6 +59,10 @@
   .intro .intro-text {
     font-size: 2em;
   }
+
+  #letter img {
+    float: left;
+  }
 }
 
 /* About Us Section -------------------------------------------------------- */
@@ -88,7 +92,6 @@
 }
 
 #letter img {
-  float: left;
   padding: 15px 15px 15px 15px;
 }
 
