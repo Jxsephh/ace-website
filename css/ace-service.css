@@ -14,3 +14,7 @@
 #info img {
   width: 100%;
 }
+
+#info p {
+  text-align: left;
+}
