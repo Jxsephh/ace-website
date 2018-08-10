@@ -1,6 +1,6 @@
 
 @import url("ace.css");
 
-#contact {
-  width: 100%;
+.contact {
+  text-align: left;
 }
