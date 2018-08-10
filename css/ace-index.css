@@ -1,5 +1,6 @@
 
 /* Intro Section ----------------------------------------------------------- */
+@import url("ace.css");
 
 .intro {
   display: table;
@@ -7,11 +8,12 @@
   height: 100%;
   background: url(../img/backgrounds/msc-small.jpg) no-repeat center scroll;
   background-size: cover;
+  color: 
 }
 
 .intro .intro-body {
   text-align: center;
-  color: #600000;
+  color: var(--primary-dark-color);
 }
 
 .intro .transbox {
@@ -57,6 +59,10 @@
   .intro .intro-text {
     font-size: 2em;
   }
+
+  #letter img {
+    float: left;
+  }
 }
 
 /* About Us Section -------------------------------------------------------- */
@@ -66,11 +72,11 @@
 }
 
 .carousel-indicators li {
-  background: white;
+  background: var(--surface-color);
 }
 
 .carousel-indicators .active {
-  background: #600000;
+  background: var(--primary-color);
 }
 
 .carousel-control.left,
@@ -80,9 +86,17 @@
 
 /* Calendar ---------------------------------------------------------------- */
 
-#calendar {
+#letter {
   width: 100%;
-  background-color: wheat;
+  background-color: var(--surface-color);
+}
+
+#letter img {
+  padding: 15px 15px 15px 15px;
+}
+
+#letter p {
+  text-align: left;
 }
 
 /* Contact Us Section ------------------------------------------------------ */

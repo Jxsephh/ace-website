@@ -16,9 +16,11 @@
 
     <!-- Basic styles for ACE pages -->
     <link href="css/ace.css" rel="stylesheet">
+    <link href="css/admissions.css" rel = "stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
 
     <!-- Custom styles for this page -->
-    <link href="css/ace-recruitment.css" rel="stylesheet">
+    
 
     <!-- Custom Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
@@ -35,35 +37,80 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="index.html">
-            <span><img src="img/white-wolf-icon.png"></span> ACE
+            <span><img src="img/icons/white-wolf-icon.png"></span> ACE
           </a>
         </div><!--/.nav-header -->
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="index.html">Home</a></li>
             <li><a href="index.html#about">About</a></li>
-            <li><a href="index.html#calendar">Calendar</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="service.html">Service</a></li>
             <li><a href="officers.html">Officers</a></li>
+            <li><a href="contact.html">Contact</a></li>
             <li class="active"><a href="recruitment.html">Recruitment</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div><!--/.container -->
     </nav><!--.navbar--> 
 
+    <div class="gallery js-flickity" data-flickity-options='{ "freeScroll": true,"wrapAround": true  }'>
+          <div class="gallery-cell">
+              <img src ="./img/admission-caro/ace-brotherhood.jpg">
+          </div>
+          <div class="gallery-cell">
+                  <img  src ="./img/admission-caro/ace-service-event1.jpg">
+              </div>
+          <div class="gallery-cell">
+              <img src ="./img/admission-caro/ace-alumn.jpg">
+          </div>
+          <div class="gallery-cell">
+              <img  src ="./img/admission-caro/ace-vball-pic.jpg">
+          </div>
+          <div class="gallery-cell">
+            <img  src ="./img/admission-caro/ace-ultimate-pic.jpg">
+          </div>
+    </div>
     <section class="container content-section text-center">
-    <p>Recruitment info would go here.</p>
+    <p>Welcome, new potential members! Check out information below for admission!</p>
     </section>
-
-    <footer class="container text-center">
-      Copyright 2016 Aggie Club of Engineers. Webmaster can be contacted <a href="mailto:acetamuwebmaster@gmail.com" target="_blank">here</a>.
-    </footer>
+    <h2 style="text-align:center;margin-top:-15px;">Informationals<hr></h2>
+    <div class = "container">
+      <div class = "ace-row">
+              <div class = "ace-column">
+                  <p>Date: <b>September 3rd, 2018</b></p>
+                  <p>Where: <b>Rudder 301</b></p>
+                  <p>Time: <b>3-4 PM</b></p>
+                      <p><b>OR</b></p>
+                  <p>Time: <b>4-5 PM</b></p>
+              </div>
+              <div class = "ace-column">
+                      <p>Date: <b>September 6rd, 2018</b></p>
+                      <p>Where: <b>Rudder 301</b></p>
+                      <p>Time: <b>3-4 PM</b></p>
+                          <p><b>OR</b></p>
+                      <p>Time: <b>4-5 PM</b></p>
+                  </div>
+          </div>
+    </div>
+    <h2 style="text-align:center;">Come Meet Us!<hr></h2>
+    <div class = "container">
+      <div class = "ace-row">
+          <div class = "ace-adj-icons">
+              <p>Where: <b>Rosa's Cafe &amp; Tortilla Factory</b></p>
+              <p>Address:<b>710 University Dr E, College Station, TX 77840</b></p>
+              <p>Check the Facebook link for more information!</p>
+          </div>
+          <a href=""><img id="facebook-icon" src = "./img/icons/facebook.png"></a>
+      </div>
+    </div>
+    <br><br><br>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <!-- Custom JavaScript -->
     <script src="js/ace.js"></script>
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script> 
   </body>
 </html>
 
