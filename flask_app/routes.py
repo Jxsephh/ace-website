@@ -26,13 +26,13 @@ def index():
     """
     Home page
     """
-    msg='login'
+    msg='Login'
     path_direct='login'
     if 'google_token' in session:
         me = google.get('userinfo')
         print(me.data)
-        msg=me.data['email']
-        path_direct='logout'
+        msg = 'Log Out ' +me.data['email']
+        path_direct = 'logout'
     return render_template('index.html',direct=path_direct,login_msg=msg)
 
 @app.route('/index')
