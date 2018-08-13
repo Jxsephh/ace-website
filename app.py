@@ -1,7 +1,4 @@
 from flask import Flask, redirect, url_for, session, request, jsonify,render_template
-
-
-
 from flask_oauthlib.client import OAuth
 
 
@@ -30,6 +27,9 @@ google = oauth.remote_app(
 
 @app.route("/")
 def index():
+    """
+    Home page
+    """
     msg='login'
     path_direct='login'
     if 'google_token' in session:
@@ -40,23 +40,33 @@ def index():
 
 @app.route('/index')
 def home():
+    """
+    redirect for home page
+    """
     return index()
-
-
 
 @app.route('/login')
 def login():
+    """
+    Authorizes users
+    """
     return google.authorize(callback=url_for('authorized', _external=True))
 
 
 @app.route('/logout')
 def logout():
+    """
+    removes user from session
+    """
     session.pop('google_token', None)
     return redirect(url_for('index'))
 
 
 @app.route(REDIRECT_PATH)
 def authorized():
+    """
+    Google Authentication
+    """
     resp = google.authorized_response()
     if resp is None:
         return 'Access denied: reason=%s error=%s' % (
