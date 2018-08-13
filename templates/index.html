@@ -12,13 +12,13 @@
     <title>Prototype Site for ACE</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- General ACE css -->
     <!-- <link href="css/ace.css" rel="stylesheet"> -->
 
     <!-- Custom styles for this page -->
-    <link href="css/ace-index.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/ace-index.css') }}" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
@@ -48,7 +48,7 @@
             <span class="icon-bar"></span>
           </button>
 	  <a class="navbar-brand" href="#home">
-            <span><img src="img/icons/white-wolf-icon.png"></span> ACE
+            <span><img src=" {{url_for('static', filename='img/icons/white-wolf-icon.png') }}"></span> ACE
           </a>
         </div><!--/.nav-header -->
         <div id="navbar" class="collapse navbar-collapse">
@@ -58,6 +58,8 @@
             <li><a href="service.html">Service</a></li>
             <li><a href="officers.html">Officers</a></li>
             <li><a href="contact.html">Contact</a></li>
+            <li><a href="admissions.html">Admissions</a></li>
+            <li><a href={{direct}}>{{login_msg}}</a></li>
             <li><a href="admissions.html">Admissions</a></li>
             <!--<li><a href="points.html">Event</a></li>-->
           </ul>
@@ -78,13 +80,13 @@
             </ol>
             <div class="carousel-inner" role="listbox">
               <div class="item active">
-                <img class="first-slide" src="img/carousel/tailgate.jpg" alt="First slide">
+                <img class="first-slide" src="{{ url_for('static',filename='img/carousel/tailgate.jpg') }}" alt="First slide">
               </div>
               <div class="item">
-                <img class="second-slide" src="img/carousel/habitat_1.jpg" alt="Second slide">
+                <img class="second-slide" src="{{ url_for('static',filename='img/carousel/habitat_1.jpg') }}" alt="Second slide">
               </div>
               <div class="item">
-                <img class="third-slide" src="img/carousel/habitat_2.jpg" alt="Third slide">
+                <img class="third-slide" src="{{ url_for('static',filename='img/carousel/habitat_2.jpg') }}" alt="Third slide">
               </div>
             </div><!-- /.carousel-inner -->
             <a class="left carousel-control" href="#ace-carousel" role="button" data-slide="prev">
@@ -111,7 +113,7 @@
           <div class="col-lg-10 col-lg-offset-1 col-sm-12 col-sm-offset-0">
             <h1>A Letter From Our President<hr></h1>
             <div>
-              <img src="img/headshots/president.jpg">
+              <img src="{{url_for('static',filename='img/headshots/president.jpg') }}">
               <p>
                 &nbsp; &nbsp; &nbsp; &nbsp;
                 The Aggie Club of Engineers started with a handful of guys, drinking a handful of beers at O’Bannon’s. They had worked through their first challenging years of engineering all while being involved in some of the best fraternities and professional organizations A&M has to offer. They were, by all stretches of the word, successful. But they had realized one thing. For all the prestige their organizations boasted, they just didn’t bring engineers together inside and outside of the classroom. They needed something different.
@@ -139,7 +141,7 @@
     </section>
     <!-- Javascript imports -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/ace.js"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/ace.js')}}"></script>
   </body>
 </html>
