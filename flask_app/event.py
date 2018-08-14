@@ -25,15 +25,38 @@ class Event(object):
     @property
     def start_time(self):
         return self.__start_time
+    @start_time.setter
+    def start_time(self,time):
+        self.__start_time = time
+
     @property
     def end_time(self):
         return self.__end_time
+    @end_time.setter
+    def end_time(self,time):
+        self.__end_time = time
+
     @property
     def points(self):
         return self.__points
+    @points.setter
+    def points(self,points):
+        if points<=0:
+            self.__points = 0
+        else:
+            self.__points = points
+
     @property
     def category(self):
         return self.__category
+    @category.setter
+    def category(self,category):
+        categories=['Flex','Service',"Fundraising"]
+        if category in categories:
+            self.__category = category
+        else:
+            self.__category= = 'Flex'
+            
     @property
     def location(self):
         return self.__location
