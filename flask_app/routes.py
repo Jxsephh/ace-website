@@ -1,7 +1,6 @@
 from flask_app import app
 from flask import Flask, redirect, url_for, session, request, jsonify,render_template
 from flask_oauthlib.client import OAuth
-import config as cfg
 
 app.secret_key = 'development'
 oauth = OAuth(app)
@@ -21,19 +20,21 @@ google = oauth.remote_app(
     authorize_url = 'https://accounts.google.com/o/oauth2/auth',
 )
 
+def get_login_info():
+    if 'google_token' in session:
+        if not 'me' in session:
+            session['me'] = google.get('userinfo').data
+        return 'logout', 'Log Out ' + session['me']['email']
+    else:
+        return 'login', 'Login'
+
 @app.route("/")
 def index():
     """
     Home page
     """
-    msg='Login'
-    path_direct='login'
-    if 'google_token' in session:
-        me = google.get('userinfo')
-        print(me.data)
-        msg = 'Log Out ' +me.data['email']
-        path_direct = 'logout'
-    return render_template('index.html',direct=path_direct,login_msg=msg)
+    path, msg = get_login_info()
+    return render_template('index.html', login_path=path, login_msg=msg)
 
 @app.route('/index')
 def home():
@@ -41,6 +42,26 @@ def home():
     redirect for home page
     """
     return index()
+
+@app.route('/service')
+def service():
+    path, msg = get_login_info()
+    return render_template('service.html', login_path=path, login_msg=msg)
+
+@app.route('/officers')
+def officers():
+    path, msg = get_login_info()
+    return render_template('officers.html', login_path=path, login_msg=msg)
+
+@app.route('/admissions')
+def admissions():
+    path, msg = get_login_info()
+    return render_template('admissions.html', login_path=path, login_msg=msg)
+
+@app.route('/contact')
+def contact():
+    path, msg = get_login_info()
+    return render_template('contact.html', login_path=path, login_msg=msg)
 
 @app.route('/login')
 def login():
@@ -70,7 +91,7 @@ def authorized():
             request.args['error_description']
         )
     session['google_token'] = (resp['access_token'], '')
-    me = google.get('userinfo')
+
    # return jsonify({"data": me.data})
     return redirect(url_for('index'))
 
