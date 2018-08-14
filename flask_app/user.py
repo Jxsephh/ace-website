@@ -93,13 +93,13 @@ class User(object):
         if 'email' in decode:
             self.email = decode['email']
         if 'service' in decode:
-            self.email = decode['service']
+            self.service = decode['service']
         if 'flex' in decode:
-            self.email = decode['flex']
+            self.flex = decode['flex']
         if 'fundraising' in decode:
-            self.email = decode['fundraising']
+            self.fundraising = decode['fundraising']
         if 'permission' in decode:
-            self.email = decode['permissionp']
+            self.permission = decode['permission']
         
 
     

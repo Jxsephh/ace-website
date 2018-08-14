@@ -2,7 +2,6 @@ from flask_app import app
 from flask import Flask, redirect, url_for, session, request, jsonify,render_template
 from flask_oauthlib.client import OAuth
 
-app.secret_key = 'development'
 oauth = OAuth(app)
 REDIRECT_PATH= '/oauth2callback'
 
