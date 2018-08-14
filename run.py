@@ -6,3 +6,8 @@ app.debug = True
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+    '''
+    *  creator 	*  name 	*  start/end times 	*  point value 	*  category 	*  location 	*  users who signed up (emails) 	*  closed flag
+    '''
