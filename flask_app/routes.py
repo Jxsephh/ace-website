@@ -23,7 +23,6 @@ def get_login_info():
     if 'google_token' in session:
         if not 'me' in session:
             session['me'] = google.get('userinfo').data
-            
         return 'logout', 'Log Out ' + session['me']['email']
     else:
         return 'login', 'Login'
