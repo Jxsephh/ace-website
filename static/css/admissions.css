@@ -1,5 +1,9 @@
 @import url("ace.css");
 
+h2 {
+  text-align: center;
+}
+
 .ace-row {
   /* margin-top:50px; */
   margin-bottom:2px;
