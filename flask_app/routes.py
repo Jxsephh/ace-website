@@ -57,6 +57,9 @@ def admissions():
     path, msg = get_login_info()
     return render_template('admissions.html', login_path=path, login_msg=msg)
 
+@app.route('/recruitment')
+return admissions()
+
 @app.route('/contact')
 def contact():
     path, msg = get_login_info()
