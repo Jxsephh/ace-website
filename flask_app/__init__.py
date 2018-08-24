@@ -2,7 +2,9 @@ from flask import Flask, redirect, url_for, session, request, jsonify,render_tem
 from flask_oauthlib.client import OAuth
 
 app = Flask(__name__, template_folder='templates')
-app.config.from_object("config")
+
+"""
+app.config.from_object('config')
 
 oauth = OAuth(app)
 REDIRECT_PATH= '/oauth2callback'
@@ -20,6 +22,7 @@ google = oauth.remote_app(
     access_token_url = 'https://accounts.google.com/o/oauth2/token',
     authorize_url = 'https://accounts.google.com/o/oauth2/auth',
 )
+"""
 
 def get_login_info():
     if 'google_token' in session:
@@ -68,27 +71,19 @@ def contact():
     path, msg = get_login_info()
     return render_template('contact.html', login_path=path, login_msg=msg)
 
+"""
 @app.route('/login')
 def login():
-    """
-    Authorizes users
-    """
     return google.authorize(callback=url_for('authorized', _external=True))
 
 
 @app.route('/logout')
 def logout():
-    """
-    removes user from session
-    """
     session.pop('google_token', None)
     return redirect(url_for('index'))
 
 @app.route(REDIRECT_PATH)
 def authorized():
-    """
-    Google Authentication
-    """
     resp = google.authorized_response()
     if resp is None:
         return 'Access denied: reason=%s error=%s' % (
@@ -103,6 +98,7 @@ def authorized():
 @google.tokengetter
 def get_google_oauth_token():
     return session.get('google_token')
+"""
 
 if __name__ == "__main__":
     app.run()

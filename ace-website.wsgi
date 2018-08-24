@@ -5,4 +5,3 @@ logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0,"/var/www/ace-website/")
 
 from flask_app import app as application
-application.config.from_object('config')
