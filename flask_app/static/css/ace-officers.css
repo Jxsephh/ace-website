@@ -1,5 +1,10 @@
 @import url("ace.css");
 
+.row img {
+  display: block;
+  height: 250px;
+}
+
 h2 {
   margin-top: 0px;
 }
