@@ -1,10 +1,18 @@
 @import url("ace.css");
 
-h2 {
+h1 {
   text-align: center;
 }
 
-.ace-row {
+.carousel-column {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top:30px;
+}
+
+.informational-row {
   /* margin-top:50px; */
   margin-bottom:2px;
   /* background-color:#fff; */
@@ -13,16 +21,16 @@ h2 {
   justify-content: space-evenly;
 }
 
-.ace-column {
+.informational-column {
   display:flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: left;
+  align-items: left;
   padding-top:30px;
 }
 
 @media(max-width:500px){
-  .ace-row {
+  .informational-row {
     /* margin-top:50px; */
     margin-bottom:2px;
     /* background-color:#fff; */
