@@ -1,7 +1,10 @@
-from flask import Flask, redirect, url_for, session, request, jsonify,render_template
-from flask_oauthlib.client import OAuth
+from flask import Flask
+from flask_login import LoginManager
 
 app = Flask(__name__, template_folder='templates')
+app.config.update(
+    SECRET_KEY = 'development_secret'
+)
 
 from flask_app import views
 

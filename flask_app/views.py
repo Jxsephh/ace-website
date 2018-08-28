@@ -1,45 +1,41 @@
-from flask import Flask, redirect, url_for, session, request, jsonify,render_template
-from flask_oauthlib.client import OAuth
+from flask import Flask, render_template, Response, redirect, url_for, request, session, abort
+from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 
 from flask_app import app
 
-def get_login_info():
-    if 'google_token' in session:
-        if not 'me' in session:
-            session['me'] = google.get('userinfo').data
-        return 'logout', 'Log Out ' + session['me']['email']
-    else:
-        return 'login', 'Login'
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
+# inheiriting from UserMixin provides most default implementations for this class
+class User(UserMixin):
+    def __init__(self, user_id):
+        self.id = user_id
+        self.name = "user" + str(id)
+        self.password = self.name + "_secret"
+
+    def __repr__(self):
+        return f"id:{self.id} name:{self.name} password:{self.password}"
 
 @app.route("/")
 def index():
-    """
-    Home page
-    """
-    path, msg = get_login_info()
-    return render_template('index.html', login_path=path, login_msg=msg)
+    return render_template('index.html')
 
 @app.route('/index')
 def home():
-    """
-    redirect for home page
-    """
     return index()
 
 @app.route('/service')
 def service():
-    path, msg = get_login_info()
-    return render_template('service.html', login_path=path, login_msg=msg)
+    return render_template('service.html')
 
 @app.route('/officers')
 def officers():
-    path, msg = get_login_info()
-    return render_template('officers.html', login_path=path, login_msg=msg)
+    return render_template('officers.html')
 
 @app.route('/admissions')
 def admissions():
-    path, msg = get_login_info()
-    return render_template('admissions.html', login_path=path, login_msg=msg)
+    return render_template('admissions.html')
 
 @app.route('/recruitment')
 def recruitment():
@@ -47,5 +43,48 @@ def recruitment():
 
 @app.route('/contact')
 def contact():
-    path, msg = get_login_info()
-    return render_template('contact.html', login_path=path, login_msg=msg)
+    return render_template('contact.html')
+
+@app.route('/members')
+@login_required
+def members():
+    return "Members Only Content"
+
+# somewhere to login
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']        
+        if password == username + "_secret":
+            id = username
+            user = User(id)
+            login_user(user)
+            return redirect(request.args.get("next"))
+        else:
+            return abort(401)
+    else:
+        return Response('''
+        <form action="" method="post">
+            <p><input type=text name=username>
+            <p><input type=password name=password>
+            <p><input type=submit value=Login>
+        </form>
+        ''')
+
+# somewhere to logout
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return Response('<p>Logged out</p>')
+
+# handle login failed
+@app.errorhandler(401)
+def page_not_found(e):
+    return Response('<p>Login failed</p>')
+
+# callback to reload the user object
+@login_manager.user_loader
+def load_user(userid):
+    return User(userid)
