@@ -3,7 +3,7 @@ from flask_oauthlib.client import OAuth
 
 app = Flask(__name__, template_folder='templates')
 
-from flask_app import routes
+from flask_app import views
 
 if __name__ == "__main__":
     app.run()
