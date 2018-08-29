@@ -56,7 +56,6 @@ def oauth2callback():
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
     login_user(User(me.data.get('email')))
-
     return redirect(url_for('members'))
 
 @app.route('/logout')
