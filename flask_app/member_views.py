@@ -31,11 +31,6 @@ google = oauth.remote_app(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
 
-@app.route('/members')
-@login_required
-def members():
-    return "Members only content here."
-
 @app.route('/login')
 def login():
     return google.authorize(callback=url_for('oauth2callback', _external=True))
@@ -56,7 +51,6 @@ def oauth2callback():
     else:
         # load the user
         user = get_user(me.data.get('email'))
-        print(user.id)
 
         # if this user didn't exist already create and save them
         if user == None:
@@ -80,3 +74,14 @@ def get_google_oauth_token():
 @login_manager.user_loader
 def get_user(user_id):
     return load_user(db_users.find_one({'id': user_id}))
+
+# member content routes
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/attendance')
+@login_required
+def attendance():
+    return render_template('attendance.html')

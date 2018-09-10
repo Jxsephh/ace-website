@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./images/white-wolf-icon.png">
+
+    <!-- Custom css -->
+    <link type = "text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link type = "text/css" rel="stylesheet" href="static/css/dashboard.css">
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+
+    <!-- Add this after vue.js -->
+    <script src="static/js/ace.js"></script>
+    <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+  </head>
+  <body id = "ace-dashboard-body">
+    <div class = "ace-header">
+      <div class = "ace-logo">
+        <img src = "static/img/icons/white-wolf-icon.png"/>
+        <span>ACE</span>
+      </div>
+      <a href="#" class="nav-trigger"><span></span></a>
+    </div>
+    <div class ="ace-dashboard-sidenav">
+      <div class = "ace-logo">
+        <img src = "static/img/icons/white-wolf-icon.png"/>
+        <span>ACE</span>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a href="dashboard">
+            <span><i class = "material-icons dashboard-icons">home</i></span>
+            <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href=attendance>
+            <span><i class ="material-icons dashboard-icons">book</i></span>
+            <span>Attendance</span>
+            </a>
+          </li>
+          <li>
+            <a href=#>
+            <span><i class ="material-icons dashboard-icons">event</i></span>
+            <span>Events</span>
+            </a>
+          </li>
+          <li>
+            <a href=#>
+            <span><i class ="material-icons dashboard-icons">exit_to_app</i></span>
+            <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class = "ace-dashboard-content">
+      <div class = "title">
+        Welcome back! {{current_user.id}}
+      </div>
+    </div>
+  </body>
+</html>

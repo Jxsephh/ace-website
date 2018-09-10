@@ -1,7 +1,5 @@
-body#ace-login-body {
-    background-color:#495867;
-    color:#fff;
-}
+@import url("ace.css");
+
 body#ace-dashboard-body {
     margin: 0;
 	padding: 0;
@@ -10,33 +8,18 @@ body#ace-dashboard-body {
 	-webkit-font-smoothing: antialiased;
   	-moz-osx-font-smoothing: grayscale;
 }
-/***
-Login Screen CSS
-***/
-.centered-login {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    /* bring your own prefixes */
-    transform: translate(-50%, -50%);
-  }
-
-  /***
-Login Screen END
-***/
 
 /***
 Dashboard CSS
 ***/
 
-.ace-header{
+.ace-header {
     position: absolute;
     width:100%;
     z-index:3;
     height:44px;
-    background: #fff;
-    border-bottom: 3px solid #2d3d51;
-    
+    background: var(--primary-dark-color);
+    border-bottom: 3px solid var(--primary-light-color);
 
 }
 .ace-logo {
@@ -45,7 +28,7 @@ Dashboard CSS
     font-weight: 700;
 }
 .ace-header .ace-logo {
-    color:#233245;
+    color: var(--font-color-light);
     float: left;
     height: 44px;
 	z-index: 1;
@@ -53,8 +36,8 @@ Dashboard CSS
 	font-weight: 700;
 }
 .ace-dashboard-sidenav .ace-logo{
-    background-color:#233245;
-    color: #fff;
+    background-color: var(--primary-dark-color);
+    color: var(--font-color-light);
 }
 .ace-logo .dashboard-icons {
     font-size: 22px;
@@ -74,7 +57,7 @@ Dashboard CSS
 .nav-trigger span, .nav-trigger span:before, span:after {
 	width: 20px;
 	height: 2px;
-	background-color: #35475e;
+	background-color: var(--font-color-light);
 	position: absolute;
 }
 .nav-trigger span {
@@ -97,7 +80,7 @@ Side nav styles
 	position: absolute;
 	width: 100%;
 	height: 100vh;
-	background-color: #35475e;
+	background-color: var(--primary-color);
 	z-index: 1;
 	display: none;
 }
@@ -110,7 +93,7 @@ Side nav styles
 }
 .ace-dashboard-sidenav ul li {
 	padding: 16px 16px;
-	border-bottom: 1px solid #3c506a;
+	border-bottom: 1px solid var(--primary-light-color);
 	position: relative;
 }
 .ace-dashboard-sidenav ul li.active:before {
@@ -120,15 +103,15 @@ Side nav styles
 	height: 100%;
 	top: 0;
 	left: 0;
-	background-color: #fff;
+	background-color: var(--font-color-light);
 }
 .ace-dashboard-sidenav ul li a {
-	color: #fff;
+	color: var(--font-color-light);
 	display: block;
 	text-decoration: none;
 }
 .ace-dashboard-sidenav ul li i {
-	color: #0497df;
+	color: var(--accent-color);
 	min-width: 20px;
 	text-align: center;
 }
@@ -147,8 +130,8 @@ Side nav styles
     overflow:scroll;
 }
 .ace-dashboard-content .title {
-    background-color:#eef1f7;
-    border-bottom: 1px solid #b8bec9;
+    background-color:var(--background-color);
+    border-bottom: 1px solid var(--surface-color);
 	padding: 10px 20px;
 	font-weight: 700;
 	color: #333;
@@ -161,7 +144,7 @@ Side nav styles
         width:25%;
     }
     .ace-header {
-        background-color: #35475e;
+        background-color: var(--primary-color);
         z-index:1;
     }
     .ace-header .ace-logo {
@@ -171,7 +154,7 @@ Side nav styles
         display: none;
     }
     .nav-trigger span, .nav-trigger span:before, span:after {
-        background-color: #fff;
+        background-color: var(--font-color-light);
     }
     .ace-dashboard-sidenav {
         display: block;
