@@ -1,0 +1,228 @@
+body#ace-login-body {
+    background-color:#495867;
+    color:#fff;
+}
+body#ace-dashboard-body {
+    margin: 0;
+	padding: 0;
+	font-family: 'Source Sans Pro', sans-serif;
+	background-color: #d5dae5;
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+}
+/***
+Login Screen CSS
+***/
+.centered-login {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+  }
+
+  /***
+Login Screen END
+***/
+
+/***
+Dashboard CSS
+***/
+
+.ace-header{
+    position: absolute;
+    width:100%;
+    z-index:3;
+    height:44px;
+    background: #fff;
+    border-bottom: 3px solid #2d3d51;
+    
+
+}
+.ace-logo {
+    height: 44px;
+    padding: 10px;
+    font-weight: 700;
+}
+.ace-header .ace-logo {
+    color:#233245;
+    float: left;
+    height: 44px;
+	z-index: 1;
+	padding: 10px;
+	font-weight: 700;
+}
+.ace-dashboard-sidenav .ace-logo{
+    background-color:#233245;
+    color: #fff;
+}
+.ace-logo .dashboard-icons {
+    font-size: 22px;
+}
+.ace-logo span {
+    margin-left:5px;
+    text-transform: uppercase;
+}
+.nav-trigger {
+	position: relative;
+	float: right;
+	width: 20px;
+	height: 44px;
+	right: 30px;
+	display: block;	
+}
+.nav-trigger span, .nav-trigger span:before, span:after {
+	width: 20px;
+	height: 2px;
+	background-color: #35475e;
+	position: absolute;
+}
+.nav-trigger span {
+	top: 50%;
+}
+.nav-trigger span:before, .nav-trigger span:after {
+	content: '';
+}
+.nav-trigger span:before {
+	top: -6px;
+}
+.nav-trigger span:after {
+	top: 6px;
+}
+
+/**
+Side nav styles
+**/
+.ace-dashboard-sidenav {
+	position: absolute;
+	width: 100%;
+	height: 100vh;
+	background-color: #35475e;
+	z-index: 1;
+	display: none;
+}
+.ace-dashboard-sidenav.visible {
+	display: block;
+}
+.ace-dashboard-sidenav ul {
+	margin: 0;
+	padding: 0;
+}
+.ace-dashboard-sidenav ul li {
+	padding: 16px 16px;
+	border-bottom: 1px solid #3c506a;
+	position: relative;
+}
+.ace-dashboard-sidenav ul li.active:before {
+	content: '';
+	position: absolute;
+	width: 4px;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background-color: #fff;
+}
+.ace-dashboard-sidenav ul li a {
+	color: #fff;
+	display: block;
+	text-decoration: none;
+}
+.ace-dashboard-sidenav ul li i {
+	color: #0497df;
+	min-width: 20px;
+	text-align: center;
+}
+.ace-dashboard-sidenav ul li span:nth-child(2) {
+	margin-left: 10px;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.ace-dashboard-content {
+    padding:40px;
+    margin-top:0;
+    padding:0;
+    padding-top: 44px;
+    height: 100%;
+    overflow:scroll;
+}
+.ace-dashboard-content .title {
+    background-color:#eef1f7;
+    border-bottom: 1px solid #b8bec9;
+	padding: 10px 20px;
+	font-weight: 700;
+	color: #333;
+	font-size: 18px;
+}
+
+
+  @media screen and (min-width:760px) {
+    .centered-login {
+        width:25%;
+    }
+    .ace-header {
+        background-color: #35475e;
+        z-index:1;
+    }
+    .ace-header .ace-logo {
+        display:none;
+    }
+    .nav-trigger {
+        display: none;
+    }
+    .nav-trigger span, .nav-trigger span:before, span:after {
+        background-color: #fff;
+    }
+    .ace-dashboard-sidenav {
+        display: block;
+        width:70px;
+        z-index: 2;
+    }
+    .ace-dashboard-sidenav ul li span:nth-child(2) {
+        display:none;
+    }
+    .ace-dashboard-sidenav .ace-logo i {
+        padding-left:12px;
+    }
+    .ace-dashboard-sidenav .ace-logo span {
+        display: none;
+    }
+    .ace-dashboard-sidenav ul lu i {
+        font-size:26px;
+    }
+    .ace-dashboard-sidenav ul li a {
+        text-align: center;
+    }
+
+    .ace-dashboard-content {
+        margin-left:70px;
+    }
+
+  }
+
+  @media screen and (min-width: 1024px) {
+      .centered-login {
+          width:45%;
+      }
+      .ace-dashboard-sidenav {
+          width:200px;
+      }
+      .ace-dashboard-sidenav ul li span:nth-child(2) {
+          display: inline-block;
+      }
+      .ace-dashboard-sidenav ul li i {
+          font-size:16px;
+      }
+      .ace-dashboard-sidenav ul li a {
+          text-align:  left;
+      }
+      .ace-dashboard-sidenav .ace-logo i {
+          padding-left:0;
+      }
+      .ace-dashboard-sidenav .ace-logo span {
+          display: inline-block;
+      }
+      .ace-dashboard-content {
+		margin-left: 200px;
+	}
+  }
