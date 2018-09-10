@@ -1,8 +1,14 @@
-from flask import Flask, render_template, Response, redirect, url_for, request, session, abort, jsonify
+from flask import Flask, render_template, redirect, url_for, request, session, jsonify, g
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 from flask_oauthlib.client import OAuth
+from flask_app.user import User, load_user, dump_user
+from flask_pymongo import PyMongo
 
 from flask_app import app
+
+# database setup
+mongo = PyMongo(app)
+db_users = mongo.db.users
 
 # login setup
 login_manager = LoginManager()
@@ -25,17 +31,6 @@ google = oauth.remote_app(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
 
-# inheiriting from UserMixin provides most default implementations for this class
-class User(UserMixin):
-    def __init__(self, user_id):
-        self.id = user_id
-        self.name = "user" + str(id)
-        self.password = self.name + "_secret"
-        print(f"Logged in:\n{self}")
-
-    def __repr__(self):
-        return f"id:{self.id} name:{self.name} password:{self.password}"
-
 @app.route('/members')
 @login_required
 def members():
@@ -55,8 +50,21 @@ def oauth2callback():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
-    login_user(User(me.data.get('email')))
-    return redirect(url_for('members'))
+
+    if me.data.get('email') not in app.config.get('WHITELIST'):
+        return redirect(url_for('index'))
+    else:
+        # load the user
+        user = get_user(me.data.get('email'))
+        print(user.id)
+
+        # if this user didn't exist already create and save them
+        if user == None:
+            user = User(me.data.get('email'))
+            db_users.insert_one(dump_user(user))
+
+        login_user(user)
+        return redirect(url_for('members'))
 
 @app.route('/logout')
 @login_required
@@ -70,5 +78,5 @@ def get_google_oauth_token():
     return session.get('google_token')
 
 @login_manager.user_loader
-def load_user(user_id):
-    return User(user_id)
+def get_user(user_id):
+    return load_user(db_users.find_one({'id': user_id}))

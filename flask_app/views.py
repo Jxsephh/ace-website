@@ -1,14 +1,14 @@
-from flask import Flask, render_template, Response, redirect, url_for, request, session, abort
+from flask import Flask, render_template
 
 from flask_app import app
 
 @app.route("/")
-def index():
+def home():
     return render_template('index.html')
 
 @app.route('/index')
-def home():
-    return index()
+def index():
+    return home()
 
 @app.route('/service')
 def service():
