@@ -9,8 +9,10 @@
   --background-color: #eef1f7;
   --surface-color: #d5dae5;
   --primary-color: #35475e;
+  --primary-light-color: #3c506a;
   --primary-dark-color: #233245;
-  --accent-color: #AF1B3F;
+  --accent-color: #6B9080;
+  --accent-dark-color: #4E695E;
   --font-color-dark: black;
   --font-color-light: white;
 }

@@ -1,4 +1,9 @@
 *.pyc
 
 config.py
+
+# virtual environment folders
 venv/
+env/
+
+.vscode

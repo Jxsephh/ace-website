@@ -1,45 +1,26 @@
-from flask import Flask, redirect, url_for, session, request, jsonify,render_template
-from flask_oauthlib.client import OAuth
+from flask import Flask, render_template
 
 from flask_app import app
 
-def get_login_info():
-    if 'google_token' in session:
-        if not 'me' in session:
-            session['me'] = google.get('userinfo').data
-        return 'logout', 'Log Out ' + session['me']['email']
-    else:
-        return 'login', 'Login'
-
 @app.route("/")
-def index():
-    """
-    Home page
-    """
-    path, msg = get_login_info()
-    return render_template('index.html', login_path=path, login_msg=msg)
+def home():
+    return render_template('index.html')
 
 @app.route('/index')
-def home():
-    """
-    redirect for home page
-    """
-    return index()
+def index():
+    return home()
 
 @app.route('/service')
 def service():
-    path, msg = get_login_info()
-    return render_template('service.html', login_path=path, login_msg=msg)
+    return render_template('service.html')
 
 @app.route('/officers')
 def officers():
-    path, msg = get_login_info()
-    return render_template('officers.html', login_path=path, login_msg=msg)
+    return render_template('officers.html')
 
 @app.route('/admissions')
 def admissions():
-    path, msg = get_login_info()
-    return render_template('admissions.html', login_path=path, login_msg=msg)
+    return render_template('admissions.html')
 
 @app.route('/recruitment')
 def recruitment():
@@ -47,5 +28,4 @@ def recruitment():
 
 @app.route('/contact')
 def contact():
-    path, msg = get_login_info()
-    return render_template('contact.html', login_path=path, login_msg=msg)
+    return render_template('contact.html')
