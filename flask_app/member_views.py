@@ -58,7 +58,7 @@ def oauth2callback():
             db_users.insert_one(dump_user(user))
 
         login_user(user)
-        return redirect(url_for('members'))
+        return redirect(url_for('dashboard'))
 
 @app.route('/logout')
 @login_required
