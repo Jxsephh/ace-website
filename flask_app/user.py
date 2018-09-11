@@ -21,6 +21,7 @@ class User(UserMixin):
         self.id = id
         self.first_name = ''
         self.last_name = ''
+        self.attendance = 0
         self.service = 0
         self.flex = 0
         self.fundraising = 0
@@ -30,6 +31,7 @@ def dump_user(user):
             'id': user.id,
             'first_name': user.first_name, 
             'last_name': user.last_name,
+            'attendance': user.attendance,
             'service': user.service,
             'flex': user.flex,
             'fundraising': user.fundraising}
@@ -42,6 +44,7 @@ def load_user(document):
     user = User(document['id'])
     user.first_name = document['first_name']
     user.last_name = document['last_name']
+    user.attendance = document['attendance']
     user.service = document['service']
     user.flex = document['flex']
     user.fundraising = document['fundraising']
