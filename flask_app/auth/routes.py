@@ -4,7 +4,7 @@ from flask_oauthlib.client import OAuth
 
 from flask_app.models import User, mongo
 
-mod = Blueprint('members', __name__, template_folder='templates')
+mod = Blueprint('auth', __name__, template_folder='templates')
 
 # login setup
 login_manager = LoginManager()
@@ -25,15 +25,28 @@ google = oauth.remote_app(
     app_key='GOOGLE'
 )
 
-# lazy loading of app config
+# lazy loading of things once app state is available
 @mod.record_once
 def on_load(state):
     login_manager.init_app(state.app)
-    oauth.init_app(state.app)
+    oauth.init_app(state.app) # loads the google secret keys from instance/config.py
+
+@login_manager.user_loader
+def get_user(user_id):
+    document = mongo.db.users.find_one({'id': user_id})
+    if document == None:
+        user = User(user_id)
+        mongo.db.users.insert_one(user.dump())
+        return user
+    return User.from_json(document)
+
+@google.tokengetter
+def get_google_oauth_token():
+    return session.get('google_token')
 
 @mod.route('/login')
 def login():
-    return google.authorize(callback=url_for('members.oauth2callback', _external=True))
+    return google.authorize(callback=url_for('auth.oauth2callback', _external=True))
 
 @mod.route('/oauth2callback')
 def oauth2callback():
@@ -47,7 +60,7 @@ def oauth2callback():
     me = google.get('userinfo')
 
     if me.data.get('email') not in current_app.config.get('WHITELIST'):
-        return redirect(url_for('index'))
+        return redirect(url_for('static.index'))
     else:
         # load the user
         user = get_user(me.data.get('email'))
@@ -58,27 +71,14 @@ def oauth2callback():
             mongo.db.users.insert_one(user.dump())
 
         login_user(user)
-        return redirect(url_for('members.dashboard'))
+        return redirect(url_for('auth.dashboard'))
 
 @mod.route('/logout')
 @login_required
 def logout():
     session.pop('google_token', None)
     logout_user()
-    return redirect(url_for('index'))
- 
-@google.tokengetter
-def get_google_oauth_token():
-    return session.get('google_token')
-
-@login_manager.user_loader
-def get_user(user_id):
-    document = mongo.db.users.find_one({'id': user_id})
-    if document == None:
-        user = User(user_id)
-        mongo.db.users.insert_one(user.dump())
-        return user
-    return User.from_json(document)
+    return redirect(url_for('static.index'))
 
 # member content routes
 @mod.route('/dashboard')

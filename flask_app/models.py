@@ -1,6 +1,8 @@
 from flask_login import UserMixin
 from flask_pymongo import PyMongo
 
+# only here so this can be imported in multiple blueprints after being instantiated once
+# in __init__.py
 mongo = PyMongo()
 
 class User(UserMixin):
@@ -19,7 +21,7 @@ class User(UserMixin):
             return None
         assert document['_type'] == 'user'
         
-        user = cls(document['id'])
+        user = cls(document.get('id', ''))
         user.first_name = document.get('first_name', '')
         user.last_name = document.get('last_name', '')
         user.attendance = document.get('attendance', 0)
