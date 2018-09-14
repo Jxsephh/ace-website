@@ -1,31 +1,31 @@
-from flask import Flask, render_template
+from flask import Blueprint, render_template
 
-from flask_app import app
+mod = Blueprint('static', __name__, template_folder='templates', static_folder='static', static_url_path='/static')
 
-@app.route("/")
+@mod.route("/")
 def home():
     return render_template('index.html')
 
-@app.route('/index')
+@mod.route('/index')
 def index():
     return home()
 
-@app.route('/service')
+@mod.route('/service')
 def service():
     return render_template('service.html')
 
-@app.route('/officers')
+@mod.route('/officers')
 def officers():
     return render_template('officers.html')
 
-@app.route('/admissions')
+@mod.route('/admissions')
 def admissions():
     return render_template('admissions.html')
 
-@app.route('/recruitment')
+@mod.route('/recruitment')
 def recruitment():
     return admissions()
 
-@app.route('/contact')
+@mod.route('/contact')
 def contact():
     return render_template('contact.html')
