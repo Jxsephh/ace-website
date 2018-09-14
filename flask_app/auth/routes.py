@@ -71,7 +71,7 @@ def oauth2callback():
             mongo.db.users.insert_one(user.dump())
 
         login_user(user)
-        return redirect(url_for('auth.dashboard'))
+        return redirect(url_for('members.dashboard'))
 
 @mod.route('/logout')
 @login_required
@@ -80,13 +80,4 @@ def logout():
     logout_user()
     return redirect(url_for('static.index'))
 
-# member content routes
-@mod.route('/dashboard')
-@login_required
-def dashboard():
-    return render_template('dashboard.html')
 
-@mod.route('/attendance')
-@login_required
-def attendance():
-    return render_template('attendance.html')

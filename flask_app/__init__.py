@@ -9,6 +9,7 @@ app.config.from_pyfile('config.py')
 # import blueprints
 from flask_app.static_site.routes import mod as static
 from flask_app.auth.routes import mod as auth
+from flask_app.members.routes import mod as members
 
 # set up mongo
 mongo.init_app(app)
@@ -16,4 +17,5 @@ mongo.init_app(app)
 # register blueprints
 app.register_blueprint(static)
 app.register_blueprint(auth)
+app.register_blueprint(members, url_prefix='/members')
 
