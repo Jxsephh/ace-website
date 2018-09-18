@@ -1,6 +1,7 @@
 from flask import Blueprint, current_app, render_template, redirect, url_for, request, session
 from flask_login import LoginManager, login_required, login_user, logout_user
 from flask_oauthlib.client import OAuth
+from bson.objectid import ObjectId
 
 from flask_app.models import User, mongo
 
@@ -8,14 +9,14 @@ mod = Blueprint('auth', __name__, template_folder='templates')
 
 # login setup
 login_manager = LoginManager()
-login_manager.login_view = "login"
+login_manager.login_view = "auth.login"
 
 # google oauth setup
 oauth = OAuth()
 google = oauth.remote_app(
     'google',
     request_token_params={
-        'scope': 'email'
+        'scope': ['email', 'profile']
     },
     base_url='https://www.googleapis.com/oauth2/v1/',
     request_token_url=None,
@@ -33,11 +34,7 @@ def on_load(state):
 
 @login_manager.user_loader
 def get_user(user_id):
-    document = mongo.db.users.find_one({'id': user_id})
-    if document == None:
-        user = User(user_id)
-        mongo.db.users.insert_one(user.dump())
-        return user
+    document = mongo.db.users.find_one({'_id': ObjectId(user_id)})
     return User.from_json(document)
 
 @google.tokengetter
@@ -58,26 +55,28 @@ def oauth2callback():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
+    google.get('email', )
 
     if me.data.get('email') not in current_app.config.get('WHITELIST'):
         return redirect(url_for('static.index'))
     else:
         # load the user
-        user = get_user(me.data.get('email'))
+        print(f'loading user {me.data}')
+        document = mongo.db.users.find_one({'email': me.data.get('email')})
+        user = User.from_json(document)
 
         # if this user didn't exist already create and save them
         if user == None:
             user = User(me.data.get('email'))
-            mongo.db.users.insert_one(user.dump())
+            db_response = mongo.db.users.insert_one(user.dump())
+            # need to set the id before we login the user
+            user.id = db_response.inserted_id 
 
         login_user(user)
         return redirect(url_for('members.dashboard'))
 
 @mod.route('/logout')
-@login_required
 def logout():
     session.pop('google_token', None)
     logout_user()
     return redirect(url_for('static.index'))
-
-
