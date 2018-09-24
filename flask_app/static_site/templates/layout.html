@@ -1,22 +1,22 @@
+{% from "macros.html" import nav_link with context %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
     <meta name="ACE" content="">
     <meta name="Matthew Turner" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" href="static/img/icons/white-wolf-icon.png">
     <title>Aggie Club of Engineers</title>
+
     <!-- Bootstrap core CSS -->
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Basic styles for ACE pages -->
-    <link href="static/css/ace.css" rel="stylesheet">
-    <!-- Custom styles for this page -->
-    <link href="static/css/ace-template.css" rel="stylesheet">
-    <!-- Custom Fonts -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/ace.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    {% block styles %}{% endblock %}
   </head>
   <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
     <nav id="nav" class="navbar navbar-default navbar-fixed-top">
@@ -28,38 +28,32 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html">
+          <a class="navbar-brand" href="#home">
           <span><img src="static/img/icons/white-wolf-icon.png"></span> ACE
           </a>
         </div>
         <!--/.nav-header -->
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="index">Home</a></li>
-            <li><a href="index#about">About</a></li>
-            <li><a href="service">Service</a></li>
-            <li><a href="officers">Officers</a></li>
-            <li><a href="contact">Contact</a></li>
-            <li class="active"><a href="admissions">Admissions</a></li>
-            <li><a href="login">Login</a></li>
+            {{ nav_link('static.index', 'Home') }}
+            {{ nav_link('static.index', 'About', 'about') }}
+            {{ nav_link('static.service', 'Service') }}
+            {{ nav_link('static.officers', 'Officers') }}
+            {{ nav_link('static.contact', 'Contact') }}
+            {{ nav_link('static.admissions', 'Admissions') }}
+            {{ nav_link('auth.login', 'Login') }}
           </ul>
         </div>
         <!--/.nav-collapse -->
       </div>
       <!--/.container -->
     </nav>
-    <!--.navbar--> 
-    <section class="container content-section text-center">
-      <p>Content Here.</p>
-    </section>
-    <footer class="container text-center">
-      Copyright 2016 Aggie Club of Engineers. Webmaster can be contacted <a href="mailto:acetamuwebmaster@gmail.com" target="_blank">here</a>.
-    </footer>
-    <!-- Bootstrap core JavaScript
-      ================================================== -->
+    <!--.navbar-->
+    {% block content %}{% endblock %}
+
+    <!-- Javascript imports -->
     <script src="static/js/jquery-3.1.0.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
-    <!-- Custom JavaScript -->
-    <script src="static/js/ace.js"></script>
+    {% block scripts %}{% endblock %}
   </body>
 </html>

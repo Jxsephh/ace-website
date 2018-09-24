@@ -8,7 +8,7 @@
   height: 100%;
   background: url(../img/backgrounds/msc-small.jpg) no-repeat center scroll;
   background-size: cover;
-  color: 
+  color: var(--surface-color);
 }
 
 .intro .intro-body {

@@ -1,0 +1,30 @@
+<!-- nav link macro -->
+{% macro nav_link(endpoint, name, anchor) %}
+{% if not anchor %}
+  {% if request.endpoint.endswith(endpoint)%}
+    <li class="active"><a href="{{ url_for(endpoint) }}">{{name}}</a></li>
+  {% else %}
+    <li><a href="{{ url_for(endpoint) }}">{{name}}</a></li>
+  {% endif %}
+{% else %}
+  <li><a href="{{ url_for(endpoint, _anchor=anchor) }}">{{name}}</a></li>
+{% endif %}
+{% endmacro %}
+
+<!-- headshot macro for officers page -->
+{% macro headshot(title, name, img_link, first, exec) %}
+{% if first and exec%}
+<div class="col-md-2 col-md-offset-1 col-xs-6">
+{% elif first %}
+<div class="col-md-2 col-md-offset-2 col-xs-6">
+{% else %}
+<div class="col-md-2 col-xs-6">
+{% endif %}
+    <img class="img-responsive center-block" src="static/img/admission-team/{{img_link}}" onerror="this.src='static/img/headshots/default.png'"><br>
+    <h2>
+      {{title}}
+      <hr>
+    </h2>
+    <p>{{name}}</p>
+</div>
+{% endmacro %}
