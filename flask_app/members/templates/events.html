@@ -1,18 +1,28 @@
 {% extends "layout.html" %}
+{% block styles %}
+  <link type="text/css" rel="stylesheet" href="static/css/events.css">
+{% endblock %}
 {% block content %}
 <div class = "title">
   Signed in as {{current_user.email}}
 </div>
-<div class="row m-2">
-  {% for event in events %}
-    {% set signup_url = url_for('api.signup', event_id=event._id['$oid']) %}
-    <div class="card mx-2">
-      <div class="card-body">
-        <h4 class="card-title">{{event.name}}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{event.location}}</h6>
-        <input class="btn btn-primary" type="button" value="Sign Up" onclick="signup('{{signup_url}}');" />
+<section id="events">
+  <div class="row">
+    {% for event in events %}
+      {% set signup_url = url_for('api.signup', event_id=event._id['$oid']) %}
+      <div class="col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">{{event.name}}</h4>
+            <h6 class="card-subtitle mb-2 text-muted">{{event.location}}</h6>
+            <input class="btn btn-primary" type="button" value="Sign Up" onclick="signup('{{signup_url}}');" />
+          </div>
+        </div>
       </div>
-    </div>
-  {% endfor %}
-</div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="static/js/events.js"></script>
 {% endblock %}

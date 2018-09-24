@@ -1,21 +1,22 @@
 <html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <meta name="ACE Members" content="">
+    <meta name="ACE" content="">
     <meta name="Matthew Turner" content="">
-    <link rel="icon" type="image/png" href="static/img/icons/white-wolf-icon.png">
+    <link rel="icon" href="{{url_for('static.static', filename='img/icons/black-wolf-icon.png')}}">
     <title>Aggie Club of Engineers</title>
 
     <!-- css -->
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <link type = "text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link type = "text/css" rel="stylesheet" href="static/css/layout.css">
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link type="text/css" rel="stylesheet" href="{{url_for('static.static', filename='css/bootstrap.min.css')}}">
+    <link type="text/css" rel="stylesheet" href="static/css/layout.css">
     {% block styles %}{% endblock %}
   </head>
-  <body id="ace-layout-body">
+  <body>
     <div class="ace-header">
       <div class="ace-logo">
         <img src="static/img/icons/white-wolf-icon.png"/>
@@ -31,7 +32,7 @@
       <nav>
         <ul>
           <li>
-            <a href="layout">
+            <a href="dashboard">
             <span><i class="material-icons layout-icons">home</i></span>
             <span>Home</span>
             </a>
@@ -49,7 +50,7 @@
             </a>
           </li>
           <li>
-            <a href=logout>
+            <a href={{url_for('auth.logout')}}>
             <span><i class="material-icons layout-icons">exit_to_app</i></span>
             <span>Logout</span>
             </a>
@@ -59,12 +60,12 @@
     </div>
     <!-- content -->
     <div class="ace-layout-content">
-      {% block content %}{% endblock %}
+    {% block content %}{% endblock %}
     </div>
 
     <!-- js -->
-    <script src="static/js/jquery-3.1.0.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
+    <script src="{{url_for('static.static', filename='js/jquery-3.1.0.min.js')}}"></script>
+    <script src="{{url_for('static.static', filename='js/bootstrap.min.js')}}"></script>
     <script src="static/js/layout.js"></script>
     {% block scripts %}{% endblock %}
   </body>
