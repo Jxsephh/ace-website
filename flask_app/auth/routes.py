@@ -55,7 +55,6 @@ def oauth2callback():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
-    google.get('email', )
 
     if me.data.get('email') not in current_app.config.get('WHITELIST'):
         return redirect(url_for('static.index'))
@@ -63,14 +62,19 @@ def oauth2callback():
         # load the user
         print(f'loading user {me.data}')
         document = mongo.db.users.find_one({'email': me.data.get('email')})
-        user = User.from_json(document)
+        user = None
 
         # if this user didn't exist already create and save them
-        if user == None:
+        if document == None:
             user = User(me.data.get('email'))
+            user.first_name = me.data.get('given_name')
+            user.last_name = me.data.get('family_name')
+
+            # insert user and get their id, which mongo creates for us
             db_response = mongo.db.users.insert_one(user.dump())
-            # need to set the id before we login the user
             user.id = db_response.inserted_id 
+        else:
+            user = User.from_json(document)
 
         login_user(user)
         return redirect(url_for('members.dashboard'))

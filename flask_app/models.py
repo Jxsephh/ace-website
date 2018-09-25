@@ -18,43 +18,36 @@ class User(UserMixin):
         self.email = email
         self.first_name = ''
         self.last_name = ''
-        self.attendance = 0
         self.service = 0
         self.flex = 0
         self.fundraising = 0
         self.attendance = 0
-        self.permissions = User.MEMBER
 
     # we almost always construct users from json
     @classmethod
     def from_json(cls, document):
         if document == None:
             return None
-        assert document['_type'] == 'user'
         
         user = cls(document.get('email'))
         user.id = document.get('_id', None)
         user.first_name = document.get('first_name', '')
         user.last_name = document.get('last_name', '')
-        user.attendance = document.get('attendance', 0)
         user.service = document.get('service', 0)
         user.flex = document.get('flex', 0)
         user.fundraising = document.get('fundraising', 0)
         user.attendance = document.get('attendance', 0)
-        user.permissions = document.get('permissions', User.MEMBER)
         return user
     
     # dump user back to json
     def dump(self):
-        document = {'_type': 'user', 
-                    'email': self.email,
+        document = {'email': self.email,
                     'first_name': self.first_name, 
                     'last_name': self.last_name,
                     'service': self.service,
                     'flex': self.flex,
                     'fundraising': self.fundraising,
-                    'attendance': self.attendance,
-                    'permissions': self.permissions}
+                    'attendance': self.attendance}
         if self.id:
             document['_id'] = ObjectId(id)
         return document
@@ -78,7 +71,6 @@ class Event():
     def from_json(cls, document):
         if document == None:
             return None
-        assert document['_type'] == 'event'
         
         event = cls()
         event.id = document.get('_id', None) # we don't want to raise an error on no id
@@ -93,8 +85,7 @@ class Event():
     
     # dump event back to json
     def dump(self):
-        document = {'_type': 'event', 
-                    'name': self.name,
+        document = {'name': self.name,
                     'creator': self.creator, 
                     'value': self.value,
                     'category': self.category,

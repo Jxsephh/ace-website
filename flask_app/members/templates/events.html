@@ -3,18 +3,16 @@
   <link type="text/css" rel="stylesheet" href="static/css/events.css">
 {% endblock %}
 {% block content %}
-<div class = "title">
-  Signed in as {{current_user.email}}
-</div>
 <section id="events">
   <div class="row">
     {% for event in events %}
       {% set signup_url = url_for('api.signup', event_id=event._id['$oid']) %}
       <div class="col-sm-2">
-        <div class="card">
+        <div class="card" style="background-color:white; padding: 5px 5px;">
           <div class="card-body">
             <h4 class="card-title">{{event.name}}</h4>
-            <h6 class="card-subtitle mb-2 text-muted">{{event.location}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Location: {{event.location}}</h6>
+            <hr>
             <input class="btn btn-primary" type="button" value="Sign Up" onclick="signup('{{signup_url}}');" />
           </div>
         </div>

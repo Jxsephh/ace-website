@@ -12,6 +12,11 @@ mod = Blueprint('members', __name__, template_folder='templates', static_folder=
 def dashboard():
     return render_template('dashboard.html')
 
+@mod.route('/links')
+@login_required
+def links():
+    return render_template('links.html')
+
 @mod.route('/attendance')
 @login_required
 def attendance():

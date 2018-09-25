@@ -1,7 +1,7 @@
 from flask import Blueprint, request, Response
 from flask_login import login_required, current_user
 from http import HTTPStatus as http
-from bson.json_util import dumps
+from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 
 from flask_app.models import mongo, Event
@@ -16,7 +16,6 @@ def hello():
 @mod.route('/events', methods=['GET'])
 def events():
     if not current_user.is_authenticated:
-        print("auth failed")
         return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
 
     return Response(dumps(mongo.db.events.find({})), http.FOUND, mimetype='application/json')
@@ -36,17 +35,17 @@ def get_event(event_id):
 
 # create an event
 @mod.route('/events', methods=['POST'])
-@login_required
 def create_event():
+    if not current_user.is_authenticated:
+        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
+        
     document = request.json
-    document['_type'] = 'event'
     event = None
     try:
         event = Event.from_json(document)
-        event.users = []
     except KeyError:
         return Response('Event did not contain all the required fields.', status=http.BAD_REQUEST, mimetype="text/plain")
-    event.creator = current_user.id
+    # event.creator = current_user.id
     
     db_result = mongo.db.events.update_one(
         {'name': event.name}, 
@@ -91,9 +90,10 @@ def reopen_event(event_id):
 # sign up for an event
 @mod.route('/signup/<string:event_id>', methods=['GET'])
 def signup(event_id):
-    if not current_user.id:
+    if not current_user.is_authenticated:
         return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
 
+    # add user to event's users list if they are not already there
     db_result = mongo.db.events.update_one(
         {'_id': ObjectId(event_id)},
         {'$addToSet': {'users': current_user.id}}
@@ -102,7 +102,20 @@ def signup(event_id):
         return Response('Event not found.', status=http.NOT_FOUND)
     elif not db_result.modified_count:
         return Response('You already signed up for this event.', status=http.OK, mimetype="text/plain")
-    else:
+
+    # get the event information
+    db_result = mongo.db.events.find_one({'_id': ObjectId(event_id)})
+    event = Event.from_json(db_result)
+
+    # update user's point category
+    db_result = mongo.db.users.update_one(
+        {'_id': ObjectId(current_user.id)},
+        {'$inc': {event.category: event.value}}
+    )
+
+    if db_result.modified_count:
         return Response('Successfully signed up for event.', status=http.OK, mimetype="text/plain")
+    else:
+        return Response('Error. Data in the database is inconsistent.', status=http.INTERNAL_SERVER_ERROR, mimetype="text/plain")
 
 #@mod.route('/remove_user/<string:user_id>/')
