@@ -1,0 +1,59 @@
+{% from "macros.html" import nav_link with context %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <meta name="ACE" content="">
+    <meta name="Matthew Turner" content="">
+    <link rel="icon" href="static/img/icons/black-wolf-icon.png">
+    <title>Aggie Club of Engineers</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link href="/static/css/static_layout.css" rel="stylesheet">
+    {% block styles %}{% endblock %}
+  </head>
+  <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+    <nav id="nav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls=".navbar-fixed-top">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#home">
+          <span><img src="static/img/icons/white-wolf-icon.png"></span> ACE
+          </a>
+        </div>
+        <!--/.nav-header -->
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            {{ nav_link('static.index', 'Home') }}
+            {{ nav_link('static.index', 'About', 'about') }}
+            {{ nav_link('static.service', 'Service') }}
+            {{ nav_link('static.officers', 'Officers') }}
+            {{ nav_link('static.contact', 'Contact') }}
+            {{ nav_link('static.admissions', 'Admissions') }}
+            {{ nav_link('members.dashboard', 'Members') }}
+          </ul>
+        </div>
+        <!--/.nav-collapse -->
+      </div>
+      <!--/.container -->
+    </nav>
+    <!--.navbar-->
+    {% block content %}{% endblock %}
+
+    <!-- Javascript imports -->
+    <script src="static/js/jquery-3.1.0.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

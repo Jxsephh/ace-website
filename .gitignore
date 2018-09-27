@@ -1,9 +1,10 @@
-*.pyc
-
-config.py
+# instance folder for secrets
+instance/
 
 # virtual environment folders
 venv/
 env/
 
+# junk
 .vscode
+*.pyc
