@@ -60,7 +60,7 @@ def oauth2callback():
         return redirect(url_for('static.index'))
     else:
         # load the user
-        print(f'loading user {me.data}')
+        print('loading user ' + str(me.data))
         document = mongo.db.users.find_one({'email': me.data.get('email')})
         user = None
 
