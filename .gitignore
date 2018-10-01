@@ -8,3 +8,4 @@ env/
 # junk
 .vscode
 *.pyc
+.DS_Store
