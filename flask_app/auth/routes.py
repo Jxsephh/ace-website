@@ -3,7 +3,7 @@ from flask_login import LoginManager, login_required, login_user, logout_user
 from flask_oauthlib.client import OAuth
 from bson.objectid import ObjectId
 
-from flask_app.models import User, mongo
+from flask_app.models import NewUser, mongo
 
 mod = Blueprint('auth', __name__, template_folder='templates')
 
@@ -34,8 +34,11 @@ def on_load(state):
 
 @login_manager.user_loader
 def get_user(user_id):
-    document = mongo.db.users.find_one({'_id': ObjectId(user_id)})
-    return User.from_json(document)
+    document = NewUser({'_id': user_id})
+    document.reload()
+    return document
+    #document = mongo.db.users.find_one({'_id': ObjectId(user_id)})
+    #return User.from_json(document)
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -61,21 +64,17 @@ def oauth2callback():
     else:
         # load the user
         print('loading user ' + str(me.data))
-        document = mongo.db.users.find_one({'email': me.data.get('email')})
-        user = None
-
-        # if this user didn't exist already create and save them
-        if document == None:
-            user = User(me.data.get('email'))
-            user.first_name = me.data.get('given_name')
-            user.last_name = me.data.get('family_name')
-
-            # insert user and get their id, which mongo creates for us
-            db_response = mongo.db.users.insert_one(user.dump())
-            user.id = db_response.inserted_id 
-        else:
-            user = User.from_json(document)
-
+        user = NewUser({
+            'email': me.data.get('email'),
+            'first_name': me.data.get('given_name'),
+            'last_name': me.data.get('family_name'),
+            'attendance': 0,
+            'service': 0,
+            'flex': 0,
+            'fundraising': 0
+        })
+        user.reload()
+        user.save()
         login_user(user)
         return redirect(url_for('members.dashboard'))
 

@@ -36,8 +36,8 @@ def get_event(event_id):
 # create an event
 @mod.route('/events', methods=['POST'])
 def create_event():
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
+    #if not current_user.is_authenticated:
+    #    return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
         
     document = request.json
     event = None

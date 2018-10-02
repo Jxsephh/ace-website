@@ -1,11 +1,47 @@
 from flask import jsonify, Response
 from flask_login import UserMixin
-from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo, MongoClient
 from bson.objectid import ObjectId
 
 # only here so this can be imported in multiple blueprints after being instantiated once
 # in __init__.py
 mongo = PyMongo()
+
+class Model(dict):
+    """
+    A simple model that wraps mongodb document
+    """
+    __getattr__ = dict.get
+    __delattr__ = dict.__delitem__
+    __setattr__ = dict.__setitem__
+
+    def save(self):
+        if self._id == None:
+            self._id = str(self.collection.insert(self))
+        else:
+            self.collection.update(
+                { "_id": ObjectId(self._id) }, self)
+
+    def reload(self):
+        if self._id != None:
+            self.update(self.collection.find_one({"_id": ObjectId(self._id)}))
+        elif self.email != None:
+            self.update(self.collection.find_one({"email": self.email}))
+
+    def remove(self):
+        if self._id != None:
+            self.collection.remove({"_id": ObjectId(self._id)})
+            self.clear()
+
+    def is_loaded(self):
+        return self._id != None
+
+class NewUser(UserMixin, Model):
+    collection = MongoClient()['data']['users']
+
+    @property
+    def id(self):
+        return self._id
 
 class User(UserMixin):
     MEMBER = 2
