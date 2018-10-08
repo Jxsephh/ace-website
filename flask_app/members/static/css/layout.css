@@ -126,16 +126,17 @@ Side nav styles
     padding-top: 44px;
     height: 100%;
 }
+
 .ace-layout-content .title {
     background-color:var(--background-color);
     border-bottom: 1px solid var(--surface-color);
     padding: 10px 20px;
     font-weight: 700;
-    color: #333;
     font-size: 18px;
 }
 
 .ace-layout-content .content {
+    margin: 15px 15px;
     padding: 10px 10px;
 }
 

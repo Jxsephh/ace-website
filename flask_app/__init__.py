@@ -20,4 +20,3 @@ app.register_blueprint(static)
 app.register_blueprint(auth)
 app.register_blueprint(members, url_prefix='/members')
 app.register_blueprint(api, url_prefix='/api')
-

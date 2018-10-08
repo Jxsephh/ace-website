@@ -28,3 +28,8 @@ def events():
     events = api.events()
     print(events.json)
     return render_template('events.html', events=events.json)
+
+@mod.route('/create_event')
+@login_required
+def create_event():
+    return render_template('create_event.html')

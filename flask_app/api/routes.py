@@ -4,28 +4,29 @@ from http import HTTPStatus as http
 from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 
-from flask_app.models import mongo, Event
+from flask_app.api import auth_required, officer_required
+from flask_app.models import mongo, NewEvent, User
 
 mod = Blueprint('api', __name__)
 
+"""Just to make sure the api is returning something.
+"""
 @mod.route('/', methods=['GET'])
 def hello():
     return Response('Hello World!', http.OK, mimetype="text/plain")
 
-# get all events
+"""Get all events
+"""
 @mod.route('/events', methods=['GET'])
+@auth_required
 def events():
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
-
     return Response(dumps(mongo.db.events.find({})), http.FOUND, mimetype='application/json')
 
-# get a single event
+"""Get a single event
+"""
 @mod.route('/events/<string:event_id>', methods=['GET'])
+@auth_required
 def get_event(event_id):
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
-
     # query mongodb
     db_response = mongo.db.events.find_one({'_id': ObjectId(event_id)})
     if db_response:
@@ -33,23 +34,30 @@ def get_event(event_id):
     else:
         return Response(status=http.NOT_FOUND, mimetype="text/plain")
 
-# create an event
+"""Create an event
+"""
 @mod.route('/events', methods=['POST'])
-def create_event():
-    #if not current_user.is_authenticated:
-    #    return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
-        
-    document = request.json
+@auth_required
+@officer_required
+def create_event(): 
+    args = request.form
+    print(request.form)
     event = None
     try:
-        event = Event.from_json(document)
+        event = NewEvent.new_event(
+            args['name'],
+            current_user._id,
+            args['category'],
+            args['value'],
+            args['location'],
+            args['info']
+        )
     except KeyError:
         return Response('Event did not contain all the required fields.', status=http.BAD_REQUEST, mimetype="text/plain")
-    # event.creator = current_user.id
     
     db_result = mongo.db.events.update_one(
         {'name': event.name}, 
-        {'$setOnInsert': event.dump()}, 
+        {'$setOnInsert': event}, 
         upsert=True
     )
     if db_result.upserted_id:
@@ -57,12 +65,12 @@ def create_event():
     else:
         return Response('Event with that name already exists.', status=http.CONFLICT, mimetype="text/plain")
 
-# close an event
+"""Close an event
+"""
 @mod.route('/events/close/<string:event_id>', methods=['GET'])
+@auth_required
+@officer_required
 def close_event(event_id):
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
-
     db_result = mongo.db.events.update_one(
         {'_id': ObjectId(event_id), 'creator': ObjectId(current_user.id)},
         {'$set': {'closed': True}}
@@ -72,12 +80,12 @@ def close_event(event_id):
     else:
         return Response('Event not found', status=http.NOT_FOUND, mimetype="text/plain")
 
-# reopen an event
+"""Reopen an event
+"""
 @mod.route('/events/reopen/<string:event_id>', methods=['GET'])
+@auth_required
+@officer_required
 def reopen_event(event_id):
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
-
     db_result = mongo.db.events.update_one(
         {'_id': ObjectId(event_id), 'creator': ObjectId(current_user.id)},
         {'$set': {'closed': False}}
@@ -87,12 +95,11 @@ def reopen_event(event_id):
     else:
         return Response('Event not found.', status=http.NOT_FOUND, mimetype="text/plain")
 
-# sign up for an event
+"""Sign up for an event
+"""
 @mod.route('/signup/<string:event_id>', methods=['GET'])
+@auth_required
 def signup(event_id):
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
-
     # add user to event's users list if they are not already there
     db_result = mongo.db.events.update_one(
         {'_id': ObjectId(event_id)},
@@ -105,7 +112,7 @@ def signup(event_id):
 
     # get the event information
     db_result = mongo.db.events.find_one({'_id': ObjectId(event_id)})
-    event = Event.from_json(db_result)
+    event = NewEvent(db_result)
 
     # update user's point category
     db_result = mongo.db.users.update_one(
@@ -118,4 +125,14 @@ def signup(event_id):
     else:
         return Response('Error. Data in the database is inconsistent.', status=http.INTERNAL_SERVER_ERROR, mimetype="text/plain")
 
-#@mod.route('/remove_user/<string:user_id>/')
+"""Get a user
+"""
+@mod.route('/users/<string:user_id>')
+@auth_required
+@officer_required
+def get_user(user_id):
+    db_response = mongo.db.users.find_one({'_id': ObjectId(user_id)})
+    if db_response:
+        return Response(dumps(db_response), status=http.FOUND, mimetype="application/json")
+    else:
+        return Response(status=http.NOT_FOUND, mimetype="text/plain")

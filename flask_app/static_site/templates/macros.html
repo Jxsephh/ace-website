@@ -12,8 +12,8 @@
 {% endmacro %}
 
 <!-- headshot macro for officers page -->
-{% macro headshot(title, name, img_link, first, exec) %}
-{% if first and exec%}
+{% macro headshot(title, name, img_link, first, five) %}
+{% if first and five%}
 <div class="col-md-2 col-md-offset-1 col-xs-6">
 {% elif first %}
 <div class="col-md-2 col-md-offset-2 col-xs-6">

@@ -3,7 +3,7 @@ from flask_login import LoginManager, login_required, login_user, logout_user
 from flask_oauthlib.client import OAuth
 from bson.objectid import ObjectId
 
-from flask_app.models import NewUser, mongo
+from flask_app.models import User, mongo
 
 mod = Blueprint('auth', __name__, template_folder='templates')
 
@@ -34,7 +34,7 @@ def on_load(state):
 
 @login_manager.user_loader
 def get_user(user_id):
-    document = NewUser({'_id': user_id})
+    document = User({'_id': user_id})
     document.reload()
     return document
     #document = mongo.db.users.find_one({'_id': ObjectId(user_id)})
@@ -52,7 +52,7 @@ def login():
 def oauth2callback():
     resp = google.authorized_response()
     if resp is None:
-        return 'Access denied: reason=%s error=%s' % (
+        return 'Access denied: reason=%s error=%s. Contact Webmaster if you believe this is an' % (
             request.args['error_reason'],
             request.args['error_description']
         )
@@ -64,15 +64,12 @@ def oauth2callback():
     else:
         # load the user
         print('loading user ' + str(me.data))
-        user = NewUser({
-            'email': me.data.get('email'),
-            'first_name': me.data.get('given_name'),
-            'last_name': me.data.get('family_name'),
-            'attendance': 0,
-            'service': 0,
-            'flex': 0,
-            'fundraising': 0
-        })
+        user = User.new_user(
+            me.data.get('email'), 
+            me.data.get('given_name'), 
+            me.data.get('family_name')
+        )
+        
         user.reload()
         user.save()
         login_user(user)

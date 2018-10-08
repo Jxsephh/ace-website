@@ -8,15 +8,16 @@ from bson.objectid import ObjectId
 mongo = PyMongo()
 
 class Model(dict):
-    """
-    A simple model that wraps mongodb document
+    """Basic Model for MongoDB
+
+    Taken from https://gist.github.com/fatiherikli/4350345
     """
     __getattr__ = dict.get
     __delattr__ = dict.__delitem__
     __setattr__ = dict.__setitem__
 
     def save(self):
-        if self._id == None:
+        if self._id == None: #pylint: disable=E0203
             self._id = str(self.collection.insert(self))
         else:
             self.collection.update(
@@ -25,8 +26,6 @@ class Model(dict):
     def reload(self):
         if self._id != None:
             self.update(self.collection.find_one({"_id": ObjectId(self._id)}))
-        elif self.email != None:
-            self.update(self.collection.find_one({"email": self.email}))
 
     def remove(self):
         if self._id != None:
@@ -36,59 +35,54 @@ class Model(dict):
     def is_loaded(self):
         return self._id != None
 
-class NewUser(UserMixin, Model):
+class User(UserMixin, Model):
+    """User model for MongoDB and object used by flask_login
+    """
     collection = MongoClient()['data']['users']
 
     @property
     def id(self):
         return self._id
 
-class User(UserMixin):
-    MEMBER = 2
-    OFFICER = 1
-    ADMIN = 0
+    def reload(self):
+        if self._id != None:
+            self.update(self.collection.find_one({"_id": ObjectId(self._id)}))
+        elif self.email != None:
+            self.update(self.collection.find_one({"email": self.email}))
 
-    # users always have at least an email
-    def __init__(self, email):
-        self.id = None
-        self.email = email
-        self.first_name = ''
-        self.last_name = ''
-        self.service = 0
-        self.flex = 0
-        self.fundraising = 0
-        self.attendance = 0
-
-    # we almost always construct users from json
     @classmethod
-    def from_json(cls, document):
-        if document == None:
-            return None
-        
-        user = cls(document.get('email'))
-        user.id = document.get('_id', None)
-        user.first_name = document.get('first_name', '')
-        user.last_name = document.get('last_name', '')
-        user.service = document.get('service', 0)
-        user.flex = document.get('flex', 0)
-        user.fundraising = document.get('fundraising', 0)
-        user.attendance = document.get('attendance', 0)
-        return user
-    
-    # dump user back to json
-    def dump(self):
-        document = {'email': self.email,
-                    'first_name': self.first_name, 
-                    'last_name': self.last_name,
-                    'service': self.service,
-                    'flex': self.flex,
-                    'fundraising': self.fundraising,
-                    'attendance': self.attendance}
-        if self.id:
-            document['_id'] = ObjectId(id)
-        return document
+    def new_user(cls, email, first_name, last_name):
+        return cls({
+            'email': email,
+            'first_name': first_name,
+            'last_name': last_name,
+            'attendance': 0,
+            'service': 0,
+            'flex': 0,
+            'fundraising': 0
+        })
 
-# -----------------------------------------------------------------------
+class NewEvent(Model):
+    """Event model for MongoDB
+    """
+    collection = MongoClient()['data']['events']
+
+    @property
+    def id(self):
+        return self._id
+
+    @classmethod
+    def new_event(cls, name, creator, category, value, location, info):
+        return cls({
+            'name': name,
+            'creator': creator,
+            'category': category,
+            'value': value,
+            'location': location,
+            'info': info,
+            'users': [],
+            'closed': False
+        })
 
 class Event():
     # completely default constructor
