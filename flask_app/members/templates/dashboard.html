@@ -1,8 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>Your Points</h2>
-<hr>
-<div class="progress">
-    <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+<h3>Your Points</h3>
+<div class="row">
+    <div class="col-md-4">
+        <div class="list-group">
+            <li class="list-group-item">Attendance {{current_user.attendance}}/14</li>
+            <li class="list-group-item">Flex {{current_user.flex}}/40</li>
+            <li class="list-group-item">Fundraising {{current_user.fundraising}}/20</li>
+            <li class="list-group-item">Service {{current_user.service}}/40</li>
+        </div>
+    </div>
 </div>
 {% endblock %}
