@@ -117,7 +117,7 @@ def signup(event_id):
     # update user's point category
     db_result = mongo.db.users.update_one(
         {'_id': ObjectId(current_user.id)},
-        {'$inc': {event.category: event.value}}
+        {'$inc': {event.category: int(event.value)}}
     )
 
     if db_result.modified_count:

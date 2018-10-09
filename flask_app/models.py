@@ -46,9 +46,13 @@ class User(UserMixin, Model):
 
     def reload(self):
         if self._id != None:
-            self.update(self.collection.find_one({"_id": ObjectId(self._id)}))
+            document = self.collection.find_one({"_id": ObjectId(self._id)})
+            if document: 
+                self.update(document)
         elif self.email != None:
-            self.update(self.collection.find_one({"email": self.email}))
+            document = self.collection.find_one({"email": self.email})
+            if document:
+                self.update(document)
 
     @classmethod
     def new_user(cls, email, first_name, last_name):
