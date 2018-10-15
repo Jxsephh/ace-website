@@ -34,11 +34,10 @@ def on_load(state):
 
 @login_manager.user_loader
 def get_user(user_id):
-    document = User({'_id': user_id})
-    document.reload()
-    return document
-    #document = mongo.db.users.find_one({'_id': ObjectId(user_id)})
-    #return User.from_json(document)
+    user = User()
+    user['_id'] = user_id
+    user.load()
+    return user
 
 @google.tokengetter
 def get_google_oauth_token():
