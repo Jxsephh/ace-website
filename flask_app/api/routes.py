@@ -49,7 +49,7 @@ def create_event():
         event['category'] = args['category']
         event['value'] = args['value']
         event['location'] = args['location']
-        event['shifts'] = args['shifts']
+        event['shifts'] = args['shifts'] == 'on'
         event['info'] = args['info']
     except KeyError:
         return Response('Event did not contain all the required fields.', status=http.BAD_REQUEST, mimetype="text/plain")

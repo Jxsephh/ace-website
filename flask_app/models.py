@@ -16,13 +16,8 @@ class Model(dict):
     # __delattr__ = dict.__delitem__
     # __setattr__ = dict.__setitem__
 
-    def __setitem__(self, key, value):
-        if key not in self:
-            raise KeyError("{} is not a legal key of this model".format(repr(key)))
-        dict.__setitem__(self, key, value)
-
     def save(self):
-        if self.is_loaded: 
+        if self.is_loaded(): 
             self.collection.update({'_id': ObjectId(self._id) }, self) #pylint: disable=E0203
         else:
             self._id = str(self.collection.insert(self))
@@ -38,12 +33,12 @@ class Model(dict):
             return False
 
     def remove(self):
-        if self.is_loaded:
+        if self.is_loaded():
             self.collection.remove({'_id': ObjectId(self._id)})
             self.clear()
 
     def is_loaded(self):
-        return self._id != ''
+        return self._id != None
 
 class User(UserMixin, Model):
     """User model for MongoDB and object used by flask_login
@@ -56,7 +51,6 @@ class User(UserMixin, Model):
 
     def __init__(self):
         super(User, self).__init__({
-            '_id': '',
             'email': '',
             'first_name': '',
             'last_name': '',
@@ -73,7 +67,6 @@ class Event(Model):
 
     def __init__(self):
         super(Event, self).__init__({
-            '_id': '',
             'name': '',
             'creator': '',
             'category': 'flex',

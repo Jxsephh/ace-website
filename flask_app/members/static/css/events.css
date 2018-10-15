@@ -1,3 +1,15 @@
 #events {
-    padding: 15px 15px;
+    padding: 10px 10px;
+}
+
+.event-card {
+    margin: 10px 0px;
+    border-radius: 5px;
+}
+
+.card-text {
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }

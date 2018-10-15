@@ -12,8 +12,7 @@
     <title>Aggie Club of Engineers</title>
 
     <!-- css -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" 
-          integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static.static', filename='css/bootstrap.min.css') }}">
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link type="text/css" rel="stylesheet" href="static/css/layout.css">
     {% block styles %}{% endblock %}
@@ -21,14 +20,14 @@
   <body>
     <div class="ace-header">
       <div class="ace-logo">
-        <img src="static/img/icons/white-wolf-icon.png"/>
+        <img src="{{url_for('static.static', filename='img/icons/white-wolf-icon.png')}}"/>
         <span>ACE</span>
       </div>
       <a href="#" class="nav-trigger"><span></span></a>
     </div>
     <div class="ace-layout-sidenav">
       <div class="ace-logo">
-        <img src="static/img/icons/white-wolf-icon.png"/>
+        <img src="{{url_for('static.static', filename='img/icons/white-wolf-icon.png')}}"/>
         <span>ACE</span>
       </div>
       <nav>
@@ -58,7 +57,7 @@
             </a>
           </li>
           <li>
-            <a href={{url_for('auth.logout')}}>
+            <a href="{{url_for('auth.logout')}}">
             <span><i class="material-icons layout-icons">exit_to_app</i></span>
             <span>Logout</span>
             </a>
@@ -78,12 +77,8 @@
     </div>
 
     <!-- js -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" 
-            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" 
-            crossorigin="anonymous"></script>
+    <script src="{{ url_for('static.static', filename='js/jquery-3.1.0.min.js') }}"></script>
+    <script src="{{ url_for('static.static', filename='js/bootstrap.min.js') }}"></script>
     <script src="static/js/layout.js"></script>
     {% block scripts %}{% endblock %}
   </body>
