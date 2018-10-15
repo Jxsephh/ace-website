@@ -63,14 +63,12 @@ def oauth2callback():
     else:
         # load the user
         print('loading user ' + str(me.data))
-        user = User.new_user(
-            me.data.get('email'), 
-            me.data.get('given_name'), 
-            me.data.get('family_name')
-        )
+        user = User()
+        user['email'] = me.data.get('email')
         
-        user.reload()
-        user.save()
+        if not user.load(key='email'):
+            user.save()
+            
         login_user(user)
         return redirect(url_for('members.dashboard'))
 

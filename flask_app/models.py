@@ -54,6 +54,7 @@ class User(UserMixin, Model):
             'email': '',
             'first_name': '',
             'last_name': '',
+            'is_officer': False,
             'attendance': 0,
             'service': 0,
             'flex': 0,

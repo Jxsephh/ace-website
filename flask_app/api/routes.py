@@ -4,7 +4,7 @@ from http import HTTPStatus as http
 from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 
-from flask_app.api import auth_required, officer_required
+from flask_app.auth import auth_required, officer_required
 from flask_app.models import mongo, Event, User
 
 mod = Blueprint('api', __name__)
@@ -35,6 +35,14 @@ def get_event(event_id):
     else:
         return Response(status=http.NOT_FOUND, mimetype="text/plain")
 
+"""Get all events a user has signed up for
+"""
+@mod.route('/eventsbyuser')
+@auth_required
+def get_events_by_user():
+    return Response(dumps(mongo.db.events.find({'users': ObjectId(current_user['_id'])})),
+        status=http.FOUND, mimetype="application/json")
+
 """Create an event
 """
 @mod.route('/events', methods=['POST'])
@@ -43,16 +51,20 @@ def get_event(event_id):
 def create_event(): 
     args = request.form
     event = Event()
-    try:
-        event['name'] = args['name']
-        event['creator'] = current_user._id
-        event['category'] = args['category']
-        event['value'] = args['value']
-        event['location'] = args['location']
-        event['shifts'] = args['shifts'] == 'on'
-        event['info'] = args['info']
+
+    print(args)
+    event['name'] = args['name']
+    event['creator'] = current_user._id
+    event['category'] = args['category']
+    event['value'] = args['value']
+    event['location'] = args['location']
+    event['shifts'] = 'shifts' in args
+    event['info'] = args['info']
+
+    """
     except KeyError:
-        return Response('Event did not contain all the required fields.', status=http.BAD_REQUEST, mimetype="text/plain")
+        return Response('Event did not contain all the required fields.{}'.format(e), status=http.BAD_REQUEST, mimetype="text/plain")
+    """
 
     event.save()
     return Response('Successfully created event.', status=http.CREATED, mimetype="text/plain")
@@ -72,7 +84,7 @@ def close_event(event_id):
     event['closed'] = True
     event.save()
 
-    return Response('Successfully closed event.', status=http.OK, mimetype="text/plain")
+    return Response('Closed event.', status=http.OK, mimetype="text/plain")
 
 """Reopen an event
 """
@@ -89,7 +101,7 @@ def reopen_event(event_id):
     event['closed'] = False
     event.save()
 
-    return Response('Successfully closed event.', status=http.OK, mimetype="text/plain")
+    return Response('Reopened event.', status=http.OK, mimetype="text/plain")
 
 """Sign up for an event
 """
@@ -102,9 +114,15 @@ def signup(event_id):
     if not event.load():
         return Response('Event not found.', status=http.NOT_FOUND)
 
-    if not ObjectId(current_user.id) in event['users']:
+    if event['closed']:
+        return Response('Event has closed.', status=http.OK)
+
+    if not ObjectId(current_user._id) in event['users']:
         event['users'] += [ObjectId(current_user.id)]
-        event.save()
+        mongo.db.events.update_one( # not error checking because this should never fail
+            {'_id': event['_id']},
+            {'$push': {'users': ObjectId(current_user._id)}}
+        )
     else:
         return Response('You already signed up for this event.', status=http.OK, mimetype="text/plain")
 
@@ -123,3 +141,44 @@ def get_user(user_id):
         return Response('User not found.', status=http.NOT_FOUND)
 
     return Response(dumps(user), status=http.FOUND, mimetype="application/json")
+
+"""Search for a single user
+"""
+@mod.route('/users', methods=['GET'])
+@auth_required
+@officer_required
+def search_user():
+    key = request.args.get('key')
+    val = request.args.get('val')
+
+    if not key and val:
+        return Response('Query string requires "key" and "val" arguments.', status=http.BAD_REQUEST)
+
+    user = User()
+    user[key] = val
+
+    if not user.load(key):
+        return Response('User not found.', status=http.NOT_FOUND)
+
+    return Response(dumps(user), status=http.FOUND, mimetype="application/json")
+
+@mod.route('/promote_user', methods=['GET'])
+@auth_required
+@officer_required
+def promote_user():
+    key = request.args.get('key')
+    val = request.args.get('val')
+
+    if not key and val:
+        return Response('Query string requires "key" and "val" arguments.', status=http.BAD_REQUEST)
+
+    user = User()
+    user[key] = val
+
+    if not user.load(key):
+        return Response('User not found.', status=http.NOT_FOUND)
+    
+    user['is_officer'] = True
+    user.save()
+
+    return Response('Promoted user.', status=http.OK)
