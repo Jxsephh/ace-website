@@ -9,6 +9,15 @@ h2 {
   margin-top: 0px;
 }
 
+.title {
+  height: 2em;
+  color: var(--font-color-dark);
+}
+
+hr {
+  border-color: var(--font-color-dark);
+}
+
 /* XM Screens */
 @media (min-width: 0px) {
   h2 {

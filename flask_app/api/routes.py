@@ -4,118 +4,187 @@ from http import HTTPStatus as http
 from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 
-from flask_app.models import mongo, Event
+from flask_app.auth import auth_required, officer_required
+from flask_app.models import mongo, Event, User
 
 mod = Blueprint('api', __name__)
 
+"""Just to make sure the api is returning something.
+"""
 @mod.route('/', methods=['GET'])
 def hello():
     return Response('Hello World!', http.OK, mimetype="text/plain")
 
-# get all events
+"""Get all events
+"""
 @mod.route('/events', methods=['GET'])
+@auth_required
 def events():
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
-
     return Response(dumps(mongo.db.events.find({})), http.FOUND, mimetype='application/json')
 
-# get a single event
+"""Get a single event
+"""
 @mod.route('/events/<string:event_id>', methods=['GET'])
+@auth_required
 def get_event(event_id):
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
+    event = Event()
+    event['_id'] = event_id
 
-    # query mongodb
-    db_response = mongo.db.events.find_one({'_id': ObjectId(event_id)})
-    if db_response:
-        return Response(dumps(db_response), status=http.FOUND, mimetype="application/json")
+    if event.load():
+        return Response(dumps(event), status=http.FOUND, mimetype="application/json")
     else:
         return Response(status=http.NOT_FOUND, mimetype="text/plain")
 
-# create an event
+"""Get all events a user has signed up for
+"""
+@mod.route('/eventsbyuser')
+@auth_required
+def get_events_by_user():
+    return Response(dumps(mongo.db.events.find({'users': ObjectId(current_user['_id'])})),
+        status=http.FOUND, mimetype="application/json")
+
+"""Create an event
+"""
 @mod.route('/events', methods=['POST'])
-def create_event():
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
-        
-    document = request.json
-    event = None
-    try:
-        event = Event.from_json(document)
+@auth_required
+@officer_required
+def create_event(): 
+    args = request.form
+    event = Event()
+
+    print(args)
+    event['name'] = args['name']
+    event['creator'] = current_user._id
+    event['category'] = args['category']
+    event['value'] = args['value']
+    event['location'] = args['location']
+    event['shifts'] = 'shifts' in args
+    event['info'] = args['info']
+
+    """
     except KeyError:
-        return Response('Event did not contain all the required fields.', status=http.BAD_REQUEST, mimetype="text/plain")
-    # event.creator = current_user.id
-    
-    db_result = mongo.db.events.update_one(
-        {'name': event.name}, 
-        {'$setOnInsert': event.dump()}, 
-        upsert=True
-    )
-    if db_result.upserted_id:
-        return Response('Successfully created event.', status=http.CREATED, mimetype="text/plain")
-    else:
-        return Response('Event with that name already exists.', status=http.CONFLICT, mimetype="text/plain")
+        return Response('Event did not contain all the required fields.{}'.format(e), status=http.BAD_REQUEST, mimetype="text/plain")
+    """
 
-# close an event
+    event.save()
+    return Response('Successfully created event.', status=http.CREATED, mimetype="text/plain")
+
+"""Close an event
+"""
 @mod.route('/events/close/<string:event_id>', methods=['GET'])
+@auth_required
+@officer_required
 def close_event(event_id):
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
+    event = Event()
+    event['_id'] = event_id
 
-    db_result = mongo.db.events.update_one(
-        {'_id': ObjectId(event_id), 'creator': ObjectId(current_user.id)},
-        {'$set': {'closed': True}}
-    )
-    if db_result.matched_count:
-        return Response('Successfully closed event.', status=http.OK, mimetype="text/plain")
-    else:
+    if not event.load():
         return Response('Event not found', status=http.NOT_FOUND, mimetype="text/plain")
+    print(current_user._id)
+    print(event['creator'])
+    if not str(current_user._id) == str(event['creator']):
+        return Response('You can only close events you created.', status=http.OK, mimetype="text/plain")
 
-# reopen an event
+    event['closed'] = True
+    event.save()
+
+    return Response('Closed event.', status=http.OK, mimetype="text/plain")
+
+"""Reopen an event
+"""
 @mod.route('/events/reopen/<string:event_id>', methods=['GET'])
+@auth_required
+@officer_required
 def reopen_event(event_id):
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
+    event = Event()
+    event['_id'] = event_id
 
-    db_result = mongo.db.events.update_one(
-        {'_id': ObjectId(event_id), 'creator': ObjectId(current_user.id)},
-        {'$set': {'closed': False}}
-    )
-    if db_result.matched_count:
-        return Response('Successfully reopened event.', status=http.OK, mimetype="text/plain")
-    else:
-        return Response('Event not found.', status=http.NOT_FOUND, mimetype="text/plain")
+    if not event.load():
+        return Response('Event not found', status=http.NOT_FOUND, mimetype="text/plain")
+    if not str(current_user._id) == str(event['creator']):
+        return Response('You can only open events you created.', status=http.OK, mimetype="text/plain")
 
-# sign up for an event
+    event['closed'] = False
+    event.save()
+
+    return Response('Reopened event.', status=http.OK, mimetype="text/plain")
+
+"""Sign up for an event
+"""
 @mod.route('/signup/<string:event_id>', methods=['GET'])
+@auth_required
 def signup(event_id):
-    if not current_user.is_authenticated:
-        return Response('Authorization required.', status=http.UNAUTHORIZED, mimetype="text/plain")
+    event = Event()
+    event['_id'] = event_id
 
-    # add user to event's users list if they are not already there
-    db_result = mongo.db.events.update_one(
-        {'_id': ObjectId(event_id)},
-        {'$addToSet': {'users': current_user.id}}
-    )
-    if not db_result.matched_count:
+    if not event.load():
         return Response('Event not found.', status=http.NOT_FOUND)
-    elif not db_result.modified_count:
+
+    if event['closed']:
+        return Response('Event has closed.', status=http.OK)
+
+    if not ObjectId(current_user._id) in event['users']:
+        event['users'] += [ObjectId(current_user.id)]
+        mongo.db.events.update_one( # not error checking because this should never fail
+            {'_id': event['_id']},
+            {'$push': {'users': ObjectId(current_user._id)}}
+        )
+    else:
         return Response('You already signed up for this event.', status=http.OK, mimetype="text/plain")
 
-    # get the event information
-    db_result = mongo.db.events.find_one({'_id': ObjectId(event_id)})
-    event = Event.from_json(db_result)
+    return Response('Successfully signed up for event.', status=http.OK, mimetype="text/plain")
 
-    # update user's point category
-    db_result = mongo.db.users.update_one(
-        {'_id': ObjectId(current_user.id)},
-        {'$inc': {event.category: event.value}}
-    )
+"""Get a user
+"""
+@mod.route('/users/<string:user_id>', methods=['GET'])
+@auth_required
+@officer_required
+def get_user(user_id):
+    user = User()
+    user['_id'] = user_id
 
-    if db_result.modified_count:
-        return Response('Successfully signed up for event.', status=http.OK, mimetype="text/plain")
-    else:
-        return Response('Error. Data in the database is inconsistent.', status=http.INTERNAL_SERVER_ERROR, mimetype="text/plain")
+    if not user.load():
+        return Response('User not found.', status=http.NOT_FOUND)
 
-#@mod.route('/remove_user/<string:user_id>/')
+    return Response(dumps(user), status=http.FOUND, mimetype="application/json")
+
+"""Search for a single user
+"""
+@mod.route('/users', methods=['GET'])
+@auth_required
+@officer_required
+def search_user():
+    key = request.args.get('key')
+    val = request.args.get('val')
+
+    if not key and val:
+        return Response('Query string requires "key" and "val" arguments.', status=http.BAD_REQUEST)
+
+    user = User()
+    user[key] = val
+
+    if not user.load(key):
+        return Response('User not found.', status=http.NOT_FOUND)
+
+    return Response(dumps(user), status=http.FOUND, mimetype="application/json")
+
+@mod.route('/promote_user', methods=['GET'])
+@auth_required
+@officer_required
+def promote_user():
+    key = request.args.get('key')
+    val = request.args.get('val')
+
+    if not key and val:
+        return Response('Query string requires "key" and "val" arguments.', status=http.BAD_REQUEST)
+
+    user = User()
+    user[key] = val
+
+    if not user.load(key):
+        return Response('User not found.', status=http.NOT_FOUND)
+    
+    user['is_officer'] = True
+    user.save()
+
+    return Response('Promoted user.', status=http.OK)

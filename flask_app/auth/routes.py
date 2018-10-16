@@ -34,8 +34,10 @@ def on_load(state):
 
 @login_manager.user_loader
 def get_user(user_id):
-    document = mongo.db.users.find_one({'_id': ObjectId(user_id)})
-    return User.from_json(document)
+    user = User()
+    user['_id'] = user_id
+    user.load()
+    return user
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -49,7 +51,7 @@ def login():
 def oauth2callback():
     resp = google.authorized_response()
     if resp is None:
-        return 'Access denied: reason=%s error=%s' % (
+        return 'Access denied: reason=%s error=%s. Contact Webmaster if you believe this is an' % (
             request.args['error_reason'],
             request.args['error_description']
         )
@@ -61,21 +63,12 @@ def oauth2callback():
     else:
         # load the user
         print('loading user ' + str(me.data))
-        document = mongo.db.users.find_one({'email': me.data.get('email')})
-        user = None
-
-        # if this user didn't exist already create and save them
-        if document == None:
-            user = User(me.data.get('email'))
-            user.first_name = me.data.get('given_name')
-            user.last_name = me.data.get('family_name')
-
-            # insert user and get their id, which mongo creates for us
-            db_response = mongo.db.users.insert_one(user.dump())
-            user.id = db_response.inserted_id 
-        else:
-            user = User.from_json(document)
-
+        user = User()
+        user['email'] = me.data.get('email')
+        
+        if not user.load(key='email'):
+            user.save()
+            
         login_user(user)
         return redirect(url_for('members.dashboard'))
 

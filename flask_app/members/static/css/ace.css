@@ -41,7 +41,6 @@ p {
 body {
   padding-top: 30px;
   font-family: 'Roboto Slab';
-  background-color: var(--background-color);
 }
 
 footer {

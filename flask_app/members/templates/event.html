@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block styles %}
+  <link type="text/css" rel="stylesheet" href="{{ url_for('members.static', filename='css/events.css') }}">
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4 col-md-offset-0 col-xs-10 col-xs-offset-1">
+        <div class="card event-card">
+            <h2 class="card-title">{{event.name}}</h2>
+            <h6 class="card-subtitle card-text"><b>Category:</b> {{event.category}}</h6>
+            <h6 class="card-subtitle card-text"><b>Location:</b> {{event.location}}</h6>
+            <h6 class="card-subtitle card-text"><b>Point Value:</b> {{event.value}}</h6>
+            <h6 class="card-subtitle card-text"><b>Closed:</b> {{event.closed}}</h6>
+
+            {% if not event.closed and not signed_up %}
+                {% set signup_url = url_for('api.signup', event_id=event._id['$oid']) %}
+                <input id="signup-btn" class="btn btn-primary" type="button" onclick="api_call('{{signup_url}}')" value="Sign Up"/>
+            {% endif %}
+            {% if current_user.is_officer %}
+                {% set close_url = url_for('api.close_event', event_id=event._id['$oid']) %}
+                {% set reopen_url = url_for('api.reopen_event', event_id=event._id['$oid']) %}
+                {% if not event.closed %}
+                <input id="close-btn" class="btn btn-primary" type="button" onclick="api_call('{{close_url}}')" value="Close Event"/>
+                {% else %}
+                <input id="reopen-btn" class="btn btn-primary" type="button" onclick="api_call('{{reopen_url}}')" value="Reopen Event"/>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <h2>{{event.title}}</h2>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('members.static', filename='js/events.js') }}"></script>
+{% endblock %}
