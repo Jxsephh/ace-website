@@ -16,7 +16,7 @@ def auth_required(f):
 def officer_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not mongo.db.permissions.find_one({'_id': ObjectId(current_user._id)}):
+        if not current_user.is_officer:
             return Response('Only officers can perform this action.', status=http.UNAUTHORIZED, mimetype="text/plain")
         return f(*args, **kwargs)
     return decorated_function
