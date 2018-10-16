@@ -80,6 +80,10 @@ def close_event(event_id):
 
     if not event.load():
         return Response('Event not found', status=http.NOT_FOUND, mimetype="text/plain")
+    print(current_user._id)
+    print(event['creator'])
+    if not str(current_user._id) == str(event['creator']):
+        return Response('You can only close events you created.', status=http.OK, mimetype="text/plain")
 
     event['closed'] = True
     event.save()
@@ -97,6 +101,8 @@ def reopen_event(event_id):
 
     if not event.load():
         return Response('Event not found', status=http.NOT_FOUND, mimetype="text/plain")
+    if not str(current_user._id) == str(event['creator']):
+        return Response('You can only open events you created.', status=http.OK, mimetype="text/plain")
 
     event['closed'] = False
     event.save()
