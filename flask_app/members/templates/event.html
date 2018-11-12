@@ -25,10 +25,21 @@
                 <input id="reopen-btn" class="btn btn-primary" type="button" onclick="api_call('{{reopen_url}}')" value="Reopen Event"/>
                 {% endif %}
             {% endif %}
+
+            
         </div>
     </div>
-    <h2>{{event.title}}</h2>
 </div>
+<h3>Users Signed Up</h3>
+<div class="row">
+        <div class="col-md-4">
+            <div class="list-group" style="max-height: 50vh;">
+                {% for user in users %}
+                <li class="list-group-item">{{user.first_name + ' ' + user.last_name}}</li>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('members.static', filename='js/events.js') }}"></script>
