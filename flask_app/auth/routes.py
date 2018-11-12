@@ -58,7 +58,7 @@ def oauth2callback():
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
 
-    if me.data.get('email') not in current_app.config.get('WHITELIST'):
+    if me.data.get('email').lower() not in current_app.config.get('WHITELIST'):
         return redirect(url_for('static.index'))
     else:
         # load the user
