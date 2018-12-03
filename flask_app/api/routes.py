@@ -104,6 +104,8 @@ def grant_points(user_id, category, amount):
 @auth_required
 @officer_required
 def reopen_event(event_id):
+    return Response('Reopening events is disabled.', status=http.OK, mimetype="text/plain")
+    
     event = Event()
     event['_id'] = event_id
 
