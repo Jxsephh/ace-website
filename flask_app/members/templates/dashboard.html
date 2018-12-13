@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+{% block styles %}
+<link type="text/css" rel="stylesheet" href="{{ url_for('members.static', filename='css/dashboard.css') }}">
+{% endblock %}
 {% block content %}
 <h3>Your Points</h3>
 <div class="row">
@@ -14,7 +17,7 @@
 <h3>Events You Are Signed Up For</h3>
 <div class="row">
     <div class="col-md-4">
-        <div class="list-group">
+        <div id="events-list" class="list-group">
             {% for event in events %}
             <a href="{{ url_for('members.event', event_id=event._id['$oid']) }}" class="list-group-item list-group-item-action">{{event.name}}</a>
             {% endfor %}

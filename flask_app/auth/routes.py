@@ -51,20 +51,21 @@ def login():
 def oauth2callback():
     resp = google.authorized_response()
     if resp is None:
-        return 'Access denied: reason=%s error=%s. Contact Webmaster if you believe this is an' % (
+        return 'Access denied: reason=%s error=%s.' % (
             request.args['error_reason'],
             request.args['error_description']
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
 
-    if me.data.get('email') not in current_app.config.get('WHITELIST'):
+    if me.data.get('email').lower() not in current_app.config.get('WHITELIST'):
         return redirect(url_for('static.index'))
     else:
         # load the user
-        print('loading user ' + str(me.data))
         user = User()
         user['email'] = me.data.get('email')
+        user['first_name'] = me.data.get('given_name')
+        user['last_name'] = me.data.get('family_name')
         
         if not user.load(key='email'):
             user.save()

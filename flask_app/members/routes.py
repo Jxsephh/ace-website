@@ -11,7 +11,6 @@ mod = Blueprint('members', __name__, template_folder='templates', static_folder=
 @login_required
 def dashboard():
     events = api.get_events_by_user()
-    print(events.json)
     return render_template('dashboard.html', events=sorted(events.json, key=lambda k: k['name']))
 
 @mod.route('/links')
@@ -36,7 +35,9 @@ def event(event_id):
     event = api.get_event(event_id)
     if not event.json:
         return "Event not found."
-    return render_template('event.html', event=event.json, event_id=str(event.json['_id']))
+    print(event.json['users'])
+    users = api.get_user_list(event.json['users'])
+    return render_template('event.html', event=event.json, event_id=str(event.json['_id']), users=list(users))
 
 @mod.route('/create_event')
 @login_required

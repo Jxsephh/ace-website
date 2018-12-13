@@ -29,7 +29,6 @@ def events():
 def get_event(event_id):
     event = Event()
     event['_id'] = event_id
-
     if event.load():
         return Response(dumps(event), status=http.FOUND, mimetype="application/json")
     else:
@@ -51,21 +50,15 @@ def get_events_by_user():
 def create_event(): 
     args = request.form
     event = Event()
-
-    print(args)
-    event['name'] = args['name']
-    event['creator'] = current_user._id
-    event['category'] = args['category']
-    event['value'] = args['value']
-    event['location'] = args['location']
-    event['shifts'] = 'shifts' in args
-    event['info'] = args['info']
-
-    """
-    except KeyError:
-        return Response('Event did not contain all the required fields.{}'.format(e), status=http.BAD_REQUEST, mimetype="text/plain")
-    """
-
+    event.update({
+        'name': args['name'],
+        'creator': current_user._id,
+        'category': args['category'],
+        'value': args['value'],
+        'location': args['location'],
+        'shifts': 'shifts' in args,
+        'info': args['info']
+    })
     event.save()
     return Response('Successfully created event.', status=http.CREATED, mimetype="text/plain")
 
@@ -80,15 +73,30 @@ def close_event(event_id):
 
     if not event.load():
         return Response('Event not found', status=http.NOT_FOUND, mimetype="text/plain")
-    print(current_user._id)
-    print(event['creator'])
     if not str(current_user._id) == str(event['creator']):
         return Response('You can only close events you created.', status=http.OK, mimetype="text/plain")
 
+    for user_id in event['users']:
+        grant_points(user_id, event['category'], int(event['value']))
     event['closed'] = True
     event.save()
 
     return Response('Closed event.', status=http.OK, mimetype="text/plain")
+
+"""Helper function for closing events.
+"""
+def grant_points(user_id, category, amount):
+    user = User()
+    user['_id'] = user_id
+
+    if not user.load():
+        return
+    if category not in ['fundraising', 'service', 'flex', 'attendance']:
+        print('category was', category)
+        return
+
+    user[category] += amount
+    user.save()
 
 """Reopen an event
 """
@@ -96,13 +104,15 @@ def close_event(event_id):
 @auth_required
 @officer_required
 def reopen_event(event_id):
+    return Response('Reopening events is disabled.', status=http.OK, mimetype="text/plain")
+    
     event = Event()
     event['_id'] = event_id
 
     if not event.load():
         return Response('Event not found', status=http.NOT_FOUND, mimetype="text/plain")
-    if not str(current_user._id) == str(event['creator']):
-        return Response('You can only open events you created.', status=http.OK, mimetype="text/plain")
+    #if not str(current_user._id) == str(event['creator']):
+    #    return Response('You can only open events you created.', status=http.OK, mimetype="text/plain")
 
     event['closed'] = False
     event.save()
@@ -119,7 +129,6 @@ def signup(event_id):
 
     if not event.load():
         return Response('Event not found.', status=http.NOT_FOUND)
-
     if event['closed']:
         return Response('Event has closed.', status=http.OK)
 
@@ -138,7 +147,6 @@ def signup(event_id):
 """
 @mod.route('/users/<string:user_id>', methods=['GET'])
 @auth_required
-@officer_required
 def get_user(user_id):
     user = User()
     user['_id'] = user_id
@@ -147,6 +155,17 @@ def get_user(user_id):
         return Response('User not found.', status=http.NOT_FOUND)
 
     return Response(dumps(user), status=http.FOUND, mimetype="application/json")
+
+"""Gets a list of users by ObjectIds
+Used to display the list of users who signed up for an event.
+"""
+@mod.route('/users', methods=['POST'])
+def get_user_list_route(): # this route is broken atm
+    ids = request.get_json()
+    return Response(dumps(get_user_list(ids)), status=http.FOUND, mimetype="application/json")
+def get_user_list(ids):
+    users = mongo.db.users.find({'_id': {'$in': [ObjectId(i['$oid']) for i in ids]}})
+    return list(users)
 
 """Search for a single user
 """
