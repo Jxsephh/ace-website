@@ -207,3 +207,24 @@ def promote_user():
     user.save()
 
     return Response('Promoted user.', status=http.OK)
+
+# @mod.route('/demote_user', methods=['GET'])
+# @auth_required
+# @officer_required
+# def demote_user():
+#     key = request.args.get('key')
+#     val = request.args.get('val')   
+
+#     if not key and val:
+#         return Response('Query string requires "key" and "val" arguments.', status=http.BAD_REQUEST)
+    
+#     user = User()
+#     user[key] = val
+
+#     if not user.load(key):
+#         return Response('User not found.', status=http.NOT_FOUND)
+
+#     user['is_officer'] = False
+#     user.save()
+
+#     return Response('Demoted user.' status=http.OK)
