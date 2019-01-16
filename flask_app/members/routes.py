@@ -18,6 +18,16 @@ def dashboard():
 def links():
     return render_template('links.html')
 
+@mod.route('/contacts')
+@login_required
+def contacts():
+    return render_template('contacts.html')
+
+@mod.route('/meeting_items')
+@login_required
+def meeting_items():
+    return render_template('meeting_items.html')
+
 @mod.route('/attendance')
 @login_required
 def attendance():
