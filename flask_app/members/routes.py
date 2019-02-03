@@ -21,7 +21,8 @@ def links():
 @mod.route('/contacts')
 @login_required
 def contacts():
-    return render_template('contacts.html')
+   # users = Response(dumps(mongo.db.users.find({})))
+    return render_template('contacts.html',)
 
 @mod.route('/meeting_items')
 @login_required
