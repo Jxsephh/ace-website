@@ -7,9 +7,15 @@
 <div class="row">
     <div class="col-md-4">
         <div class="list-group">
+            {% if ((current_user.first_name == 'Tyler') and (current_user.last_name == 'Otten')) or ((current_user.first_name == 'Trevor') and (current_user.last_name == 'Groves')) %}
+            <li class="list-group-item">Attendance {{current_user.attendance}}/14</li>
+            <li class="list-group-item">Flex {{current_user.flex}}/40</li>
+            <li class="list-group-item">Service {{current_user.service}}/80</li>
+            {% else %}
             <li class="list-group-item">Attendance {{current_user.attendance}}/14</li>
             <li class="list-group-item">Flex {{current_user.flex}}/40</li>
             <li class="list-group-item">Service {{current_user.service}}/40</li>
+            {% endif %}
         </div>
     </div>
 </div>
