@@ -5,9 +5,7 @@
 //});
 
 // Set inverval between carousel transitions
-//  $('.carousel').carousel({
-//    interval: 1000*6
-//  });
+$("#carousel").carousel();
 
 // smooth scrolling for anchor links
 $('a[href*="#"]')
