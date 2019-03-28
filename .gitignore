@@ -1,6 +1,8 @@
 # instance folder for secrets
 instance/
 
+config.py
+
 # virtual environment folders
 venv/
 env/
