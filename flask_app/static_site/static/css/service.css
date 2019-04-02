@@ -18,3 +18,8 @@
 #info p {
   text-align: left;
 }
+
+#about_cfh p {
+  margin-left: 100px;
+  margin-right: 100px;
+}
